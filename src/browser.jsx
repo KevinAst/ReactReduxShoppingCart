@@ -1,63 +1,43 @@
 'use strict';
 
-/*
-   Main file which browser launches
-
-   Catalog and Shopping Cart example app
-   - Fetches catalog data from REST API
-   - Renders as catalog
-   - Shopping cart of selected items
-   - Checkout form with validation
- */
-
-// KJB: include needed polyfills (since this the top-level js entry point in our app)
-import './util/polyfill'; // first import polyfills
-
-// KJB: import axios (promise based http client)
-// KJB: axios is referenced in the dependencies of package.json
+import './util/polyfill'; // needed polyfills (since this is the top-level js entry point for our app)
 import httpClient from 'axios';
-
-// KJB: react and react-dom is referenced in the dependencies of package.json
 import React from 'react';
 import ReactDOM from 'react-dom';
-// ? import App from './app';
+import App from './comp/app';
+import { Provider } from 'react-redux'
+import { createStore } from 'redux'
+import { appState } from './state/appState' // our app-wide reducer
+import * as AC from './state/actionCreators' // AC: Action Creators
 
-const appContainerDiv = document.querySelector('#appContainer');
 
-function render(data) {
-  console.log("KJB: in browser.jsx render() method ..." + data.items[0].name);
-  // ??? ORIGINAL
-  // ? ReactDOM.render(<App items={data.items}/>,
-  // ?                 appContainerDiv);
-  // ??? ORIGINAL
-  ReactDOM.render(<p>Temp Stub</p>,
-                  appContainerDiv);
-}
+// ***
+// *** bootstrap our single-page app
+// ***
 
-function renderError(err) {
-  const errMsg = (err.statusText) ?
-                 `Error: ${err.data} - ${err.statusText}` :
-                 err.toString();
-  ReactDOM.render(<div>{ errMsg }</div>, appContainerDiv);
-}
+// define our Redux app-wide store
+const store = createStore(appState, undefined,
+                          // KJB: optional Redux DevTools Chrome Extension
+                          window.devToolsExtension ? window.devToolsExtension() : undefined)
 
-function fetchData() {
-  return httpClient({ url: '/fake-api.json' });
-}
+// initial rendering of our app
+ReactDOM.render(<Provider store={store}>
+                  <App/>
+                </Provider>,
+                document.querySelector('#appContainer'));
 
-function fetchDataAndRender() {
-  fetchData()
-    .then(resp => {
-      console.log("great ... our data fecth was successful!");
-      console.log('data', resp.data);
-      render(resp.data);
-    })
-    // KJB: NO LIKEY: an error in render() invocation (above) funnels here
-    .catch(err => {
-      console.error(`OUCH ... an error was encountered in our fetch ... status: ${err.status}: ${err.statusText})`);
-      console.error(err);
-      renderError(err);
-    });
-}
-
-fetchDataAndRender();
+// fetch our data to display
+httpClient({ url: '/fake-api.json' })
+  .then(resp => {
+    console.log("great ... our data fecth was successful!");
+    console.log('data', resp.data);
+    store.dispatch(AC.catalogItemsDefined(resp.data.items));
+  })
+  .catch(err => {
+    console.error(`OUCH ... an error was encountered in our fetch ... status: ${err.status}: ${err.statusText})`);
+    console.error(err);
+    // TODO: in lue of alert, utilize a UI message alert to inform user of problem
+    alert( err.statusText ?
+               `Error: ${err.data} - ${err.statusText}` :
+               err.toString() );
+  });

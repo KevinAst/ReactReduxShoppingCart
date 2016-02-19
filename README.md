@@ -26,41 +26,70 @@ utilizes the React Context feature.
 
 ## Simplified UI Components
 
-The UI components are simplified, in the sense that the large set of
-detailed parameters are minimized ... in many cases eliminated all
-together.
+The UI components were simplified, in the sense that the large set of
+detailed parameters are now minimized.  In many cases component
+parameters are completely eliminated.
 
-Each component is divided into two components ... a wrapper and a contained.
+Prior to this refactor, many components required a very large number
+of parameters, communicating both data and behavioral callbacks.  It
+was very much a top-down approach, where the top-level component was
+all-knowing ... having intament knowledge of lower-level 
+components.  In some cases, parameters had to be passed from the
+top-level through the component chain, simply because it may be needed
+by a grandchild component.
 
-Prior to this refactor, there were cases where a parameter
-had to be passed through the component chain, simply because it was
-potentially required by a grandchild component.
+Where needed, a component is now divided into two seperate components
+that work in conjunction with one another.
 
+ - A controlling component, that is bound to the application state,
+   and communicates both data and behavior to the presentation
+   component (through parameters).
 
-through ???, eliminating the need to
-pass a long list of parameters from the top-down.  You can almost
-consider this a type of Dependancy Injection of both data and business
-logic.  As an example of this, look at the Catalog component
-(src/component/catalog.jsx).  This is a "wrapper" component of
-Catalog? (src/component/catalog?.jsx).
+   A controller component "wraps" the presentation component, and can
+   be roughply thought of as a type of Dependancy Injector.
 
- - Catalog:
-   * is a wrapper to Catalog? (what Redux calls ???).
+   This is what Redux refers to as a containing component, because it
+   contains a presentation component.
+
+   Most behavioral aspects are related to state changes, and can be
+   resolved at this level due to the well-designed event processors
+   that transition state (Redux's dispatch() of actions).
+
+   Typically, controlling components have very few parameters.  If they
+   do it is at a higher-level of abstraction.
+
+ - A presentation component, that is solely focused on layout and presentation.
+
+   A presentation component defers behavioral aspects back to it's
+   invoker (the controlling component).
+
+   Presentation components are "wrapped" by a controlling components.
+
+   Presentation components typically have a number of parameters.  The
+   difference is, these paramaters are typically in a short DOM chain
+   ... originating in the controlling component.
+   
+As an example of this, look at the CatalogCtrl component
+(src/component/catalog-ctrl.jsx).  The CatalogCtrl "wraps" the Catalog
+component (src/component/catalog.jsx) a presentation component.
+
+ - CatalogCtrl:
+   * wraps the Catalog (what Redux calls a container component)
    * takes minimal (or no) parameters
      - parameters at this level are higher-level controls
    * connects to the app state
-   * that transfers app state into Catalog? properties
-   * drives business functionality that ultimatly causes our state to transition
-     - by dispatching appropriate actions
- - Catalog?:
-   * is a "wrapped" component of Catalog (what Redux calls ???).
+     * transfering state to the wrapped Catalog (via properties)
+     * driving business functionality that ultimatly causes our state to transition
+       - by dispatching appropriate actions
+ - Catalog:
+   * is a "wrapped" component of Catalog (what Redux calls ??? Presentation Components).
    * it primary concern is presentation
    * accepting a number of parameters
      - both data - driving presentation content
-     - and callback functions - driving 
+     - and callback functions - driving state change
 
-The characteritics of this example Catalog are repeated throughout our various components
-
+The characteritics of this Catalog example are repeated throughout our
+app.
 
 
 ## Time Travel
