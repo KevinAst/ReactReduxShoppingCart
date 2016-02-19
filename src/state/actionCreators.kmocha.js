@@ -18,4 +18,12 @@ describe('actionCreators tests', () => {
           })
   })
 
+  it('test toggleItemDetail()', () => {
+    expect(AC.toggleItemDetail("MyItem"))
+          .toEqual({
+              type: AT.TOGGLE_ITEM_DETAIL,
+              item: "MyItem"
+          })
+  })
+
 })

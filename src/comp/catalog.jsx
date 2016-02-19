@@ -1,9 +1,10 @@
 'use strict';
 
-import React from 'react'; // ??? needed?
-// ? import ItemRow from './item-row'; ??? L8TR
+import React         from 'react';
+import ItemRow       from './item-row';
+import { PropTypes } from 'react'
 
-function Catalog({items, itemExpanded, buyFn, categories, catChangeFn, itemClickFn}) {
+function Catalog({items, itemExpanded, itemClicked, buyFn, categories, catChangeFn}) {
   return (
     <div>
       {/* ??? L8TR
@@ -20,7 +21,11 @@ function Catalog({items, itemExpanded, buyFn, categories, catChangeFn, itemClick
       */}
       <ul className="product catalog">
         { items.map(item => (
-            <li key={item.id}>??? {item.id}: {item.desc}</li>
+            <ItemRow key={item.id}
+                     item={item}
+                     itemExpanded={itemExpanded}
+                     buyClickedFnOLD={() => buyFn(item)}
+                     itemClicked={itemClicked}/>
           ))
         }
       </ul>
@@ -28,18 +33,14 @@ function Catalog({items, itemExpanded, buyFn, categories, catChangeFn, itemClick
   );
 }
 
-/* ??? L8TR ABOVE
-    <ItemRow key={item.id}
-    item={item}
-    itemExpanded={itemExpanded}
-    buyClickedFn={() => buyFn(item)}
-    clickFn={() => itemClickFn(item)}/>
-  */
+// ??? fix above
+// ?? buyClickedFn={() => buyFn(item)}
 
-// ??? define expected props
-// ? Catalog.propTypes = {
-// ?   filter:   PropTypes.string.isRequired,
-// ?   children: PropTypes.node.isRequired,
-// ? }
+
+// define expected props
+Catalog.propTypes = {
+  items:   PropTypes.array.isRequired,
+  // ??? more
+}
 
 export default Catalog;

@@ -2,7 +2,8 @@
 
 import * as AT from './actionTypes'    // AT: Action Types
 import { combineReducers } from 'redux'
-import { items } from './catalog.items'
+import { items }        from './catalog.items'
+import { itemExpanded } from './catalog.itemExpanded'
 
 
 // ***
@@ -10,6 +11,7 @@ import { items } from './catalog.items'
 // ***
 
 export const catalog = combineReducers({
-  items
+  items,
+  itemExpanded,
   // ?? more here
 })

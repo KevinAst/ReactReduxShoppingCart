@@ -13,3 +13,10 @@ export const catalogItemsDefined = (items) => {
     items,
   }
 }
+
+export const toggleItemDetail = (item) => {
+  return {
+    type: AT.TOGGLE_ITEM_DETAIL,
+    item,
+  }
+}

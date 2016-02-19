@@ -36,7 +36,7 @@ utilizes the React Context feature.
   catalog: {
     items:               [],    // items list [ { id: <int>, name: <string>, price: <int>, img: <string>, category: <string>, desc: <string>, details: <string> ]
 ??  itemsFilterCategory: null,  // item filter category <String> ??? WAS: category
-??  itemIdExpanded:      null,  // item.id to expand <int> ??? WAS: itemExpanded: null,  // item to expand
+    itemExpanded:        null,  // item to expand {...item} null for no expansion
   },
 
   cart: {

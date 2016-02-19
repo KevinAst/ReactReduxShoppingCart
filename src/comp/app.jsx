@@ -113,7 +113,6 @@ class App extends MyReactComponent {
   // x                buyFn={this.buyItem}
   // x                categories={App.CATEGORIES}
   // x                catChangeFn={this.catChange}
-  // x                itemClickFn={this.displayDetailToggle}/>
   // x     </div>
   // x   );
   // x }
@@ -129,25 +128,8 @@ class App extends MyReactComponent {
   // ?   const cat = e.target.value || null;
   // ?   this.setState({ category: cat });
   // ? }
-  // ? 
-  // ? 
-  // ? 
-  // ? // ***
-  // ? // *** show detail related ...
-  // ? // ***
-  // ? 
-  // ? displayDetailToggle(item) {
-  // ?   const {itemExpanded} = this.state;
-  // ?   if (itemExpanded && itemExpanded.id === item.id) { // toggle off already selected
-  // ?     this.setState({itemExpanded: null}); // close detail
-  // ?   }
-  // ?   else {
-  // ?     this.setState({itemExpanded: item}); // expand detail
-  // ?   }
-  // ? }
-  // ? 
-  // ? 
-  // ? 
+  // x 
+  // x 
   // ? // ***
   // ? // *** Cart related ...
   // ? // ***

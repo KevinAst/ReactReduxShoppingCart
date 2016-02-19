@@ -107,7 +107,8 @@ means:
 - Chart Monitor: showing your state in a graphical tree
 
 ![Time Traveling with Redux](./doc/reduxTimeTravel.png "Time Traveling with Redux")
-?? inject this image
+
+?? update to be the real image
 
 
 ## Conclusion
