@@ -21,7 +21,6 @@ class App extends MyReactComponent {
   // x constructor(...args) {
   // x   super(...args);
   // x 
-  // x   // ??? state is obsolete
   // x   this.state = {
   // x     category:     null,  // filter category <String>
   // x     itemExpanded: null,  // item to expand
@@ -64,7 +63,7 @@ class App extends MyReactComponent {
   // x   };
   // x }
 
-  // ??? L8TR
+  // ??? L8TR ??? I think this document handler can be accomplished globally in Esc ??? THIS WOULD render the App to be a VERY simple functional component
   // ? componentDidMount() {
   // ?   // register our master "keydown" event listener
   // ?   // ... registered at document level, to monitor key events page wide
@@ -92,10 +91,6 @@ class App extends MyReactComponent {
   // ? render() {
   // ?   const { items } = this.props;
   // ?   const { itemExpanded, cartOpen, category, checkoutOpen, receiptId } = this.state;
-  // ? 
-  // ?   const filteredItems = category ?
-  // ?                         items.filter(x => x.category === category) :
-  // ?                         items;
   // ?   return (
   // ?     <div>
   // ?       ??? OTHER DIALOGS
@@ -111,8 +106,6 @@ class App extends MyReactComponent {
   // x       <Catalog items={filteredItems}
   // x                itemExpanded={itemExpanded}
   // x                buyFn={this.buyItem}
-  // x                categories={App.CATEGORIES}
-  // x                catChangeFn={this.catChange}
   // x     </div>
   // x   );
   // x }
@@ -120,16 +113,6 @@ class App extends MyReactComponent {
 
   // ??? PULL IN ... IN DIFFERENT WAYS ... LATER
 
-  // ? // ***
-  // ? // *** filter category related ...
-  // ? // ***
-  // ? 
-  // ? catChange(e) {
-  // ?   const cat = e.target.value || null;
-  // ?   this.setState({ category: cat });
-  // ? }
-  // x 
-  // x 
   // ? // ***
   // ? // *** Cart related ...
   // ? // ***
@@ -311,8 +294,5 @@ class App extends MyReactComponent {
   // ? }
 
 }
-
-// ??? what do we do with this?
-App.CATEGORIES = ['Nature', 'React.js']; // filter categories to select from
 
 export default App;
