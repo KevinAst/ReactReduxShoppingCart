@@ -67,8 +67,9 @@ for maintaining our state.
 
 As an example, let's say you have an item who's detail should be
 expanded in our GUI.  You simply locate the desired action (or event)
-in src/state/actionCreators.js, and publish it with the Redux dispatch
-mechanism.  This task is accomplished in one line of code:
+in [src/state/actionCreators.js](./src/state/actionCreators.js),
+and publish it with the Redux dispatch mechanism.  This task is
+accomplished in one line of code:
 
 ```javascript
 import * as AC from 'src/state/actionCreators' // AC: Action Creators
@@ -80,7 +81,7 @@ import * as AC from 'src/state/actionCreators' // AC: Action Creators
 ### State Code
 
 The business logic that maintains the state definition/transition can
-be found in src/state/:
+be found in [src/state/](./src/state/):
 
 ```
 src/
@@ -105,9 +106,10 @@ src/
 
 The app state is a Redux store, and is promoted through the
 react-redux <Provider> component (see the bootstrap process in
-src/browser.jsx).  This makes the app state available to any component
-that ???.  Under the covers, this bit of magic is accomplished through
-the React Context feature.
+[src/browser.jsx](./src/browser.jsx)).  This makes the app state available to any
+component that monitors the Redux store (via the Redux-Redux connect()
+function).  Under the covers, this bit of magic is accomplished
+through the React Context feature.
 
 
 ## Simplified UI Components
@@ -156,8 +158,10 @@ that work in conjunction with one another.
    ... originating in the controlling component.
    
 As an example of this, look at the CatalogCtrl component
-(src/component/catalog-ctrl.jsx).  The CatalogCtrl "wraps" the Catalog
-component (src/component/catalog.jsx) a presentation component.
+([src/component/catalog-ctrl.jsx](./src/component/catalog-ctrl.jsx)). 
+The CatalogCtrl "wraps" the Catalog component
+([src/component/catalog.jsx](./src/component/catalog.jsx))
+a presentation component.
 
  - CatalogCtrl:
    * wraps the Catalog (what Redux calls a container component)
