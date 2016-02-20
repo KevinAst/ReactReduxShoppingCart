@@ -13,7 +13,7 @@ the Redux pattern of Actions and Reducers.  In essence these are
 business events, that drive our apps state transition.
 
 
-### State Specification
+#### State Specification
 
 The complete specification of our app state is shown here.  Notice
 that structural depth is maintained to emphasize ownership.
@@ -22,7 +22,7 @@ that structural depth is maintained to emphasize ownership.
 {
   catalog: {               // our catalog of items which can be purchased
     items:          [],    // items list [ { id: <int>, name: <string>, price: <int>, img: <string>, category: <string>, desc: <string>, details: <string> ]
-??  filterCategory: null,  // item filter category <String> ??? WAS: category
+    filterCategory: null,  // item filter category <String> "" for show all
     itemExpanded:   null,  // item to expand {...item} null for no expansion
   },
 
@@ -58,7 +58,7 @@ that structural depth is maintained to emphasize ownership.
 }
 ```
 
-### State Transition
+#### State Transition
 
 Our state definition/transition is maintained by a series of actions
 (or events) that are interpreted by a graph of reducers.  This in
@@ -78,31 +78,40 @@ import * as AC from 'src/state/actionCreators' // AC: Action Creators
 ```
 
 
-### State Code
+#### State Code
 
 The business logic that maintains the state definition/transition can
-be found in [src/state/](./src/state/):
+be found in [src/state/](./src/state/).  Please note that the
+structure of the reducers match our overall state.
 
 ```
 src/
   state/
-    actionTypes.js ...... all action types (defined constants)
+    actionTypes.js .............. all action types (defined constants)
 
-    actionCreators.js ... all action creators
+    actionCreators.js ........... all action creators
     actionCreators.kmocha.js
 
-    appState.js ......... our app's top-level reducer (a Redux combineReducer)
+    appState.js ................. appState top-level reducer (a Redux combineReducer)
 
-    catalog.js .......... appState.catalog reducer (a Redux combineReducer)
+    catalog.js .................. appState.catalog reducer (a Redux combineReducer)
 
-    catalog.items.js .... appState.catalog.items reducer
+    catalog.items.js ............ appState.catalog.items reducer
     catalog.items.kmocha.js
 
-    ??? more
+    catalog.filterCategory.js ... appState.catalog.filterCategory reducer
+    catalog.filterCategorykmocha..js
+
+    catalog.itemExpanded.js ..... appState.catalog.itemExpanded reducer
+    catalog.itemExpanded.kmocha.js
+
+    cart.js ..................... appState.cart reducer (a Redux combineReducer)
+
+    ... etc.
 ```
 
 
-### State Promotion
+#### State Promotion
 
 The app state is a Redux store, and is promoted through the
 react-redux <Provider> component (see the bootstrap process in
@@ -211,10 +220,21 @@ My experience here is that applying this framework not only simplified
 the code, but it brought order to what otherwise could very quickly
 turn into the "Wild Wild West".
 
-I strongly disagree with the mindset of "Don't use Flux till you need
-it" ([Pete Hunt's React HowTo](https://github.com/petehunt/react-howto)).
+I disagree with the sentiment that says: "Don't use Flux till you need
+it" ([Pete Hunt's React
+HowTo](https://github.com/petehunt/react-howto)).
 
-Sure for "simple apps" it may be an overkill, but when was the last
-time you wrote a "simple app"?  The shopping cart app is "pretty
-simple" (as it is a training exercise), and yet in my estimation we
-greatly benefited from this Redux injection!
+You can say the for "simple apps" it is an overkill, but when was the
+last time you wrote a "simple app"?  The shopping cart app is "pretty
+simple" (i.e. it is a training exercise), and yet in my estimation we
+greatly benefited from the Redux injection!
+
+The real development effort is in setting up the actions and reducers.
+While this may be somewhat tedious, it builds on a solid foundation
+that promotes consistency, which allows it to scale very well.  It
+also documents the total set of business functionality that can be
+easily unit tested.
+
+Once your actions and reducers are in place, invoking the business
+functionality is a breeze (it's simply a matter of dispatching an
+action).

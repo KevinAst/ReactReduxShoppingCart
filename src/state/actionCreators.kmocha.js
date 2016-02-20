@@ -18,6 +18,14 @@ describe('actionCreators tests', () => {
           })
   })
 
+  it('test filterCatalogCategory()', () => {
+    expect(AC.filterCatalogCategory("MyCategory"))
+          .toEqual({
+              type:     AT.FILTER_CATALOG_CATEGORY,
+              category: "MyCategory"
+          })
+  })
+
   it('test toggleItemDetail()', () => {
     expect(AC.toggleItemDetail("MyItem"))
           .toEqual({

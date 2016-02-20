@@ -6,14 +6,15 @@ import * as AC from '../state/actionCreators' // AC: Action Creators
 
 const mapStateToProps = (reduxAppState, ownProps) => {
   return {
-    items:        reduxAppState.catalog.items,
-    itemExpanded: reduxAppState.catalog.itemExpanded,
+    items:          reduxAppState.catalog.items,
+    filterCategory: reduxAppState.catalog.filterCategory,
+    itemExpanded:   reduxAppState.catalog.itemExpanded,
   }
 }
 
 const mapDispatchToProps = (reduxDispatch, ownProps) => {
   return {
-    // ?? example ... itemClicked: (item) => { reduxDispatch(AC.toggleItemDetail(item)) },
+    changeFilterCategory: (category) => { reduxDispatch(AC.filterCatalogCategory(category)) },
   }
 }
 

@@ -1,9 +1,10 @@
 'use strict';
 
-import * as AT from './actionTypes'    // AT: Action Types
+import * as AT             from './actionTypes'    // AT: Action Types
 import { combineReducers } from 'redux'
-import { items }        from './catalog.items'
-import { itemExpanded } from './catalog.itemExpanded'
+import { items }           from './catalog.items'
+import { filterCategory }  from './catalog.filterCategory'
+import { itemExpanded }    from './catalog.itemExpanded'
 
 
 // ***
@@ -12,6 +13,6 @@ import { itemExpanded } from './catalog.itemExpanded'
 
 export const catalog = combineReducers({
   items,
+  filterCategory,
   itemExpanded,
-  // ?? more here
 })
