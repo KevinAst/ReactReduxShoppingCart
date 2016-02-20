@@ -1,14 +1,14 @@
 'use strict';
 
 import './util/polyfill'; // needed polyfills (since this is the top-level js entry point for our app)
-import httpClient from 'axios';
-import React from 'react';
-import ReactDOM from 'react-dom';
-import App from './comp/app';
-import { Provider } from 'react-redux'
+import httpClient      from 'axios';
+import React           from 'react';
+import ReactDOM        from 'react-dom';
+import { Provider }    from 'react-redux'
 import { createStore } from 'redux'
-import { appState } from './state/appState' // our app-wide reducer
-import * as AC from './state/actionCreators' // AC: Action Creators
+import { appState }    from './state/appState'       // our app-wide reducer
+import * as AC         from './state/actionCreators' // AC: Action Creators
+import App             from './comp/app';
 
 
 // ***
@@ -36,7 +36,7 @@ httpClient({ url: '/fake-api.json' })
   .catch(err => {
     console.error(`OUCH ... an error was encountered in our fetch ... status: ${err.status}: ${err.statusText})`);
     console.error(err);
-    // TODO: in lue of alert, utilize a UI message alert to inform user of problem
+    // TODO: utilize a UI message alert to inform user of problem
     alert( err.statusText ?
                `Error: ${err.data} - ${err.statusText}` :
                err.toString() );

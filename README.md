@@ -61,12 +61,12 @@ that structural depth is maintained to emphasize ownership.
 #### State Transition
 
 Our state definition/transition is maintained by a series of actions
-(or events) that are interpreted by a graph of reducers.  This in
+that are interpreted by a graph of reducers.  This in
 conjunction with the Redux dispatcher, provides a complete solution
 for maintaining our state.
 
 As an example, let's say you have an item who's detail should be
-expanded in our GUI.  You simply locate the desired action (or event)
+expanded in our GUI.  You simply locate the desired action
 in [src/state/actionCreators.js](./src/state/actionCreators.js),
 and publish it with the Redux dispatch mechanism.  This task is
 accomplished in one line of code:
