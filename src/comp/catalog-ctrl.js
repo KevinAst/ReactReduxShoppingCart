@@ -13,7 +13,7 @@ const mapStateToProps = (reduxAppState, ownProps) => {
 
 const mapDispatchToProps = (reduxDispatch, ownProps) => {
   return {
-    itemClicked: (item) => { reduxDispatch(AC.toggleItemDetail(item)) },
+    // ?? example ... itemClicked: (item) => { reduxDispatch(AC.toggleItemDetail(item)) },
   }
 }
 

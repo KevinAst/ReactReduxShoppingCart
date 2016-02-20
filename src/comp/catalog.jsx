@@ -4,7 +4,7 @@ import React         from 'react';
 import ItemRow       from './item-row';
 import { PropTypes } from 'react'
 
-function Catalog({items, itemExpanded, itemClicked, buyFn, categories, catChangeFn}) {
+function Catalog({items, itemExpanded, buyFn, categories, catChangeFn}) {
   return (
     <div>
       {/* ??? L8TR
@@ -24,8 +24,7 @@ function Catalog({items, itemExpanded, itemClicked, buyFn, categories, catChange
             <ItemRow key={item.id}
                      item={item}
                      itemExpanded={itemExpanded}
-                     buyClickedFnOLD={() => buyFn(item)}
-                     itemClicked={itemClicked}/>
+                     buyClickedFnOLD={() => buyFn(item)}/>
           ))
         }
       </ul>

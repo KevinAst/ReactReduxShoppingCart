@@ -2,9 +2,11 @@
 
 import React           from 'react';
 import { formatMoney } from 'accounting';
+import { connect }     from 'react-redux'
 import ItemDetails     from './item-details';
+import * as AC         from '../state/actionCreators' // AC: Action Creators
 
-function ItemRow({item, itemExpanded, buyClickedFn, itemClicked, children }) {
+let ItemRow = ({item, itemExpanded, buyClickedFn, children, dispatch }) => {
 
   const genDetails = () => {
     if (item === itemExpanded )
@@ -23,7 +25,7 @@ function ItemRow({item, itemExpanded, buyClickedFn, itemClicked, children }) {
   };
 
   return (
-    <li data-id={item.id} onClick={(e) => itemClicked(item)}>
+    <li data-id={item.id} onClick={(e) => dispatch(AC.toggleItemDetail(item))}>
       <img src={item.img} className="product"/>
       <div className="summary">
         <div className="name">
@@ -33,12 +35,15 @@ function ItemRow({item, itemExpanded, buyClickedFn, itemClicked, children }) {
           <span   className="price">{ formatMoney(item.price) }</span>
           { buyClickedFn && <button className="buy" onClick={(e) => {e.stopPropagation(); buyClickedFn();}}>Buy</button> }
         </div>
-        {itemClicked && genDetails()}
+        {genDetails() /* ??? WAS qualified with ... itemClicked && ... illiminated for inline semantics at ItemDetails */}
       </div>
       {children && <div className="extra">{children}</div>}
     </li>
   );
 }
+
+ItemRow = connect()(ItemRow) // wrap ItemRow with itself, injecting Redux dispatch (no access to store)
+
 
 // ??? define expected props
 // ? ItemRow.propTypes = {
