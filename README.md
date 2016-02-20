@@ -158,9 +158,9 @@ that work in conjunction with one another.
    ... originating in the controlling component.
    
 As an example of this, look at the CatalogCtrl component
-([src/component/catalog-ctrl.jsx](./src/component/catalog-ctrl.jsx)). 
+([src/comp/catalog-ctrl.js](./src/comp/catalog-ctrl.js)). 
 The CatalogCtrl "wraps" the Catalog component
-([src/component/catalog.jsx](./src/component/catalog.jsx))
+([src/comp/catalog.jsx](./src/comp/catalog.jsx))
 a presentation component.
 
  - CatalogCtrl:
