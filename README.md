@@ -107,7 +107,7 @@ src/
 
     cart.js ..................... appState.cart reducer (a Redux combineReducer)
 
-    ... etc.
+    ... etc. etc. etc.
 ```
 
 
@@ -124,138 +124,75 @@ through the React Context feature.
 ## Simplified UI Components
 
 The UI components were simplified, in the sense that the large set of
-detailed parameters are now minimized.  In many cases component
-parameters are completely eliminated.
-
-??? NEW START
+detailed properties are now minimized.  In many cases component
+properties are completely eliminated.  In addition, the business logic
+that modifies our state is promoted through a well-defined and stable
+pattern.
 
 Prior to this refactor state and functionality filtered down from the
 top-level App component, by passing component properties.  The reason
 for this was that only the App component had access to the top-level
-state and the rudimentary setState() transformation mechnism.
+state and the rudimentary setState() transformation mechanism.
 
 This property chain was very tedious.  You may have a 3rd or 4th level
 component that required a callback defined in the root App.  This made
-the property chain very combersome, as all components in the chain had
+the property chain very cumbersome, because all components in the chain had
 to be aware of this ... in many cases intermediate components merely
-passing callbacks through to the next level.
+passed callbacks through to the next level.
 
-In our new approach, any component can have access to the app state.
-In addition, any component can dispatch well-defined business actions
-that formally alter the app state.
+In our new refactored approach:
+ - Any component has access to the app state.
+ - In addition, any component can dispatch well-defined business
+   actions that formally alter the app state.
 
 We still utilize component properties internally (both data and
-behavior) to keep our React components simple, it's just that these
+behavior) to keep our React components simple.  It's just that these
 properties are dynamically injected at the component level.  This can
 roughly be thought of as a type of Dependency Injection.
 
-In essance (where needed) we wrap an internal private component with a
-publicly promoted component that:
+In essence (where needed) we wrap an internal private component
+(e.g. Catalog$) with a publicly promoted component (e.g. Catalog)
+that:
  - has access to our Redux appState and dispatch()
  - and dynamically injects the needed properties to the internal component
 
 These components can still have properties passed to them from their
-parent component, but this is used for finer grained control (not
-based on state), and is somewhat rare.  As an example <ItemRow> has to
-be told what item it is rendering (through the "item" property).  This
-can't be defined from state because there are many items, rather the
-parent <Catalog> iterates through all items generating an <ItemRow
-item={item}/> for each.
+parent component, but this is used for finer-grained control that is
+not based on state, and is somewhat rare.  As an example `<ItemRow>` has
+to be told what item it is rendering (through the "item" property).
+This can't be defined from state because there are many items, rather
+the parent `<Catalog>` iterates through all items rendering an `<ItemRow
+item={item}/>` for each.
 
-In summary, if a component property is fundamentaly based on state, it
+This is a slight twist on what Redux calls the "containing component"
+(e.g. our public Catalog), and the "presentation component" (e.g. our
+internal Catalog$).
+
+In summary, if a component property is fundamentally based on state, it
 can be handled internally. For other non-state characteristics, a
 property can be passed from parent to child.
 
-What makes this possible is two things:
- - The redux mechnism to be able to connect to our state and it's dispatcher.
- - The fact that we have well-defined business actions that formally transition our state
+This approach is made possible because of two factors:
+ - Redux proves a technique where components may connect to our state and the dispatcher.
+ - We have well-defined business actions that formally transition our state.
 
-The end result is the code is much easier to follow.  Parameter
-passing is minimized.  As a result "cause and effect" is more
-localized to a component ... you don't have to follow a long chain
-back to the source.  In addition, you no longer have a mish mash of
-business functions thrown together at the App level.  The logic is
-much more distributed (if you will).
+As an example, in our old logic, the App component had an
+App.buyItemFn() function that had to be passed from `<App>` through
+`<Catalog>` into `<ItemRow>` where the Buy button was located.  Under
+the new refactored code, the buyItemFn() lives directly in
+`<ItemRow>`, injected by our Redux process.  In addition, it's
+implementation is a single line that dispatches a well-known action.
+No fuss, No muss.
 
-?? discuss some code examples As an example, in the old logic, the App
-component had a buyFunction() that had to be passed from <App> through
-<Catalog> through <ItemRow> where the Buy button exists.  Under the
-new refactored code, the App.buyFunction() is replaced with a ???
-Action, that can be directly dispatched from the <ItemRow> ... no
-fuss, no muss.
-
-??? look at some code where $ is post-fixed to an internal class
-    ?? the internal class is written as normal, with properties passed in
-    ?? the public wrapper class uses the react-redux connect() to inject
-       needed properties using appState and dispatch()
-
-
-??? NEW END
+The end result is the code is much easier to follow.  Property passing
+is minimized.  As a result "cause and effect" is more localized to a
+component.  You no longer have to follow a long chain back to the
+source.  In addition, you no longer have a mish mash of business
+functions thrown together at the App level.  The logic is much more
+consistent following a well established repeating pattern.
 
 
 
-Prior to this refactor, many components required a very large number
-of parameters, communicating both data and behavioral callbacks.  It
-was very much a top-down approach, where the top-level component was
-all-knowing ... having intimate knowledge of lower-level 
-components.  In some cases, parameters had to be passed from the
-top-level through the component chain, simply because it may be needed
-by a grandchild component.
-
-Where needed, a component is now divided into two separate components
-that work in conjunction with one another.
-
- - A controlling component, that is bound to the application state,
-   and communicates both data and behavior to the presentation
-   component (through parameters).
-
-   A controller component "wraps" the presentation component, and can
-   be roughly thought of as a type of Dependency Injector.
-
-   This is what Redux refers to as a containing component, because it
-   contains a presentation component.
-
-   Most behavioral aspects are related to state changes, and can be
-   resolved at this level due to the well-designed event processors
-   that transition state (Redux's dispatch() of actions).
-
-   Typically, controlling components have very few parameters.  If they
-   do it is at a higher-level of abstraction.
-
- - A presentation component, that is solely focused on layout and presentation.
-
-   A presentation component defers behavioral aspects back to it's
-   invoker (the controlling component).
-
-   Presentation components are "wrapped" by a controlling components.
-
-   Presentation components typically have a number of parameters.  The
-   difference is, these parameters are typically in a short DOM chain
-   ... originating in the controlling component.
-   
-As an example of this, look at the CatalogCtrl component
-([src/comp/catalog-ctrl.js](./src/comp/catalog-ctrl.js)). 
-The CatalogCtrl "wraps" the Catalog component
-([src/comp/catalog.jsx](./src/comp/catalog.jsx))
-a presentation component.
-
- - CatalogCtrl:
-   * wraps the Catalog (what Redux calls a container component)
-   * takes minimal (or no) parameters
-     - parameters at this level are higher-level controls
-   * connects to the app state
-     * transferring state to the wrapped Catalog (via properties)
-     * driving business functionality that ultimately causes our state to transition
-       - by dispatching appropriate actions
- - Catalog:
-   * is a "wrapped" component of Catalog (what Redux calls ??? Presentation Components).
-   * it primary concern is presentation
-   * accepting a number of parameters
-     - both data - driving presentation content
-     - and callback functions - driving state change
-
-The characteristics of this Catalog example are repeated throughout our
-app.
 
 
 ## Time Travel

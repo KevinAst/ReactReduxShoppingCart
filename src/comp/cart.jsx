@@ -112,10 +112,12 @@ const mapDispatchToProps = (dispatch, ownProps) => {
   }
 }
 
+// wrap internal Cart$ with public Cart
+// ... injecting needed properties
+// ... this renders a single sub-component <Cart$> with the props defined above
+//       ex:      <Cart/>
+//       renders: <Cart><Cart$ prop1=xxx onClick=xxx/></Cart>
 const Cart = connect(mapStateToProps, mapDispatchToProps)(Cart$)
-  // NOTE: This renders a single sub-component <Cart$> with the props defined above
-  //        ex:      <Cart/>
-  //        renders: <Cart><Cart$ prop1=xxx onClick=xxx/></Cart>
 
 // define expected props
 Cart.propTypes = {

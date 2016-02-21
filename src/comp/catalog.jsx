@@ -1,10 +1,19 @@
 'use strict';
 
 import React         from 'react';
-import ItemRow       from './item-row';
 import { PropTypes } from 'react'
+import { connect }   from 'react-redux'
+import ItemRow       from './item-row';
+import * as AC       from '../state/actionCreators' // AC: Action Creators
 
-function Catalog({items, filterCategory, changeFilterCategory}) {
+
+
+// ***
+// *** Catalog of items component
+// ***
+
+// our internal Catalog$ class (wrapped with Catalog below)
+function Catalog$({items, filterCategory, changeFilterCategory}) {
 
   const filteredItems = filterCategory ?
                           items.filter(item => item.category === filterCategory) :
@@ -35,13 +44,38 @@ function Catalog({items, filterCategory, changeFilterCategory}) {
   );
 }
 
-// define expected props
-Catalog.propTypes = {
-  items:                PropTypes.array.isRequired,
-  filterCategory:       PropTypes.string, // ??? this can come from appState.catalog.filterCategory
-  changeFilterCategory: PropTypes.func.isRequired, // ??? this can be just dispatch a new action
+
+
+//***
+//*** wrap our internal Catalog$ class with a Catalog wrapper that injects properties
+//*** (both data and behavior) from our state
+//***
+
+const mapStateToProps = (appState, ownProps) => {
+  return {
+    items:          appState.catalog.items,
+    filterCategory: appState.catalog.filterCategory,
+  }
 }
 
-Catalog.CATEGORIES = ['Nature', 'React.js']; // filter categories to select from
+const mapDispatchToProps = (dispatch, ownProps) => {
+  return {
+    changeFilterCategory: (category) => { dispatch(AC.filterCatalogCategory(category)) },
+  }
+}
+
+// wrap internal Catalog$ with public Catalog
+// ... injecting needed properties
+// ... this renders a single sub-component <Catalog$> with the props defined above
+//       ex:      <Catalog/>
+//       renders: <Catalog><Catalog$ prop1=xxx onClick=xxx/></Catalog>
+const Catalog = connect(mapStateToProps, mapDispatchToProps)(Catalog$)
+
+// define expected props
+Catalog.propTypes = {
+}
+
+// filter categories to select from
+Catalog.CATEGORIES = ['Nature', 'React.js'];
 
 export default Catalog;

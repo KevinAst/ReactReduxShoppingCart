@@ -3,7 +3,7 @@
 import React            from 'react';
 import { connect }      from 'react-redux'
 import MyReactComponent from '../util/my-react-component';
-import CatalogCtrl      from './catalog-ctrl';
+import Catalog          from './catalog';
 import Cart             from './cart';
 // ? import Checkout         from './checkout';
 // ? import Receipt          from './receipt';
@@ -41,7 +41,7 @@ class App$ extends MyReactComponent { // our internal App$ class (wrapped with A
              <span className="cartButton">
                <a onClick={this.props.openCartFn}>Cart</a>
              </span>
-             <CatalogCtrl/>
+             <Catalog/>
 
              {/* NOTE: Even though the following modal dialogs are injected here,
                        internally they are conditionally rendered ONLY when needed! */}
