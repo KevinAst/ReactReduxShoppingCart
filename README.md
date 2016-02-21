@@ -156,7 +156,7 @@ that:
  - has access to our Redux appState and dispatch()
  - and dynamically injects the needed properties to the internal component
 
-These components can still have properties passed to them from their
+These components can still have public properties passed to them from their
 parent component, but this is used for finer-grained control that is
 not based on state, and is somewhat rare.  As an example `<ItemRow>` has
 to be told what item it is rendering (through the "item" property).
@@ -168,7 +168,7 @@ This is a slight twist on what Redux calls the "containing component"
 (e.g. our public Catalog), and the "presentation component" (e.g. our
 internal Catalog$).
 
-In summary, if a component property is fundamentally based on state, it
+In summary, component property that are fundamentally based on state
 can be handled internally. For other non-state characteristics, a
 property can be passed from parent to child.
 
@@ -182,9 +182,9 @@ App.buyItemFn() function that had to be passed from `<App>` through
 the new refactored code, the buyItemFn() lives directly in
 `<ItemRow>`, injected by our Redux process.  In addition, it's
 implementation is a single line that dispatches a well-known action.
-No fuss, No muss.
+**No fuss, No muss.**
 
-The end result is the code is much easier to follow.  Property passing
+The end result is our code is much easier to follow.  Property passing
 is minimized.  As a result "cause and effect" is more localized to a
 component.  You no longer have to follow a long chain back to the
 source.  In addition, you no longer have a mish mash of business
