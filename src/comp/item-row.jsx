@@ -1,14 +1,18 @@
 'use strict';
 
 import React           from 'react';
+import { PropTypes }   from 'react'
 import { formatMoney } from 'accounting';
 import { connect }     from 'react-redux'
 import ItemDetails     from './item-details';
 import * as AC         from '../state/actionCreators' // AC: Action Creators
 
-let ItemRow = ({item, itemExpanded, buyClickedFn, children, dispatch }) => {
+const ItemRow$ = ({item, itemExpanded, allowDetails, toggleItemDetailFn, allowBuy, buyItemFn, children, }) => {
 
   const genDetails = () => {
+    if (!allowDetails)
+      return null; // no-op if details are NOT allowed
+
     if (item === itemExpanded )
       return <span>
                <button>
@@ -25,7 +29,7 @@ let ItemRow = ({item, itemExpanded, buyClickedFn, children, dispatch }) => {
   };
 
   return (
-    <li data-id={item.id} onClick={(e) => dispatch(AC.toggleItemDetail(item))}>
+    <li data-id={item.id} onClick={toggleItemDetailFn}>
       <img src={item.img} className="product"/>
       <div className="summary">
         <div className="name">
@@ -33,22 +37,48 @@ let ItemRow = ({item, itemExpanded, buyClickedFn, children, dispatch }) => {
         </div>
         <div className="pricing">
           <span   className="price">{ formatMoney(item.price) }</span>
-          { buyClickedFn && <button className="buy" onClick={(e) => {e.stopPropagation(); buyClickedFn();}}>Buy</button> }
+          { allowBuy && <button className="buy" onClick={(e) => {e.stopPropagation(); buyItemFn();}}>Buy</button> }
         </div>
-        {genDetails() /* ??? WAS qualified with ... itemClicked && ... illiminated for inline semantics at ItemDetails */}
+        {genDetails()}
       </div>
       {children && <div className="extra">{children}</div>}
     </li>
   );
 }
 
-ItemRow = connect()(ItemRow) // wrap ItemRow with itself, injecting Redux dispatch (no access to store)
 
 
-// ??? define expected props
-// ? ItemRow.propTypes = {
-// ?   filter:   PropTypes.string.isRequired,
-// ?   children: PropTypes.node.isRequired,
-// ? }
+//***
+//*** wrap our internal ItemRow$ class with a ItemRow wrapper that injects properties
+//*** (both data and behavior) from our state
+//***
+
+const mapStateToProps = (appState, ownProps) => {
+  return {
+    itemExpanded: appState.catalog.itemExpanded,
+  }
+}
+
+const mapDispatchToProps = (dispatch, ownProps) => {
+  return {
+    toggleItemDetailFn: (e) => { if (ownProps.allowDetails) dispatch(AC.toggleItemDetail(ownProps.item)) },
+    buyItemFn:          (e) => { if (ownProps.allowBuy)     dispatch(AC.buyItem(ownProps.item)) },
+  }
+}
+
+// wrap internal ItemRow$ with public ItemRow
+// ... injecting needed properties
+// ... this renders a single sub-component <ItemRow$> with the props defined above
+//       ex:      <ItemRow/>
+//       renders: <ItemRow><ItemRow$ prop1=xxx onClick=xxx/></ItemRow>
+const ItemRow = connect(mapStateToProps, mapDispatchToProps)(ItemRow$)
+
+// define expected props
+ItemRow.propTypes = {
+  item:         PropTypes.object.isRequired,
+  allowDetails: PropTypes.bool,
+  allowBuy:     PropTypes.bool,
+  children:     PropTypes.node,
+}
 
 export default ItemRow;

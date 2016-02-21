@@ -1,13 +1,15 @@
 'use strict';
 
 import React            from 'react';
+import { connect }      from 'react-redux'
 import MyReactComponent from '../util/my-react-component';
 import CatalogCtrl      from './catalog-ctrl';
-// ? import Cart             from './cart';
+import Cart             from './cart';
 // ? import Checkout         from './checkout';
 // ? import Receipt          from './receipt';
 // ? import shortid          from 'shortid';
 // ? import Esc              from './util/esc';
+import * as AC          from '../state/actionCreators' // AC: Action Creators
 
 
 
@@ -15,53 +17,7 @@ import CatalogCtrl      from './catalog-ctrl';
 // *** top-level App component
 // ***
 
-class App extends MyReactComponent {
-
-  // ??? OBSOLETE
-  // x constructor(...args) {
-  // x   super(...args);
-  // x 
-  // x   this.state = {
-  // x     category:     null,  // filter category <String>
-  // x     itemExpanded: null,  // item to expand
-  // x 
-  // x 
-  // x     // ***
-  // x     // *** state related to cart
-  // x     // ***
-  // x 
-  // x     cartOpen: false,
-  // x     cartItems: [],
-  // x 
-  // x 
-  // x     // ***
-  // x     // *** state related to receipt
-  // x     // ***
-  // x 
-  // x     receiptId:    null,
-  // x     receiptItems: [],   // type: cartItems (with qty)
-  // x 
-  // x 
-  // x     // ***
-  // x     // *** state related to checkout
-  // x     // ***
-  // x 
-  // x     checkoutOpen: false, // is the checkout dialog open?
-  // x     total:        null,  // currency KJB: unsure yet how this is going to work
-  // x 
-  // x     // NOTE: fields within our checkeout MUST match <Checkout> form field names
-  // x     addr1:      "", // string
-  // x     addr2:      "", // string
-  // x     city:       "", // string
-  // x     state:      "", // string
-  // x     zip:        "", // string
-  // x     email:      "", // string
-  // x     creditCard: "", // string
-  // x     expiry:     "", // string
-  // x     fullName:   "", // string
-  // x     cvcode:     "", // string
-  // x   };
-  // x }
+class App$ extends MyReactComponent { // our internal App$ class (wrapped with App below)
 
   // ??? L8TR ??? I think this document handler can be accomplished globally in Esc ??? THIS WOULD render the App to be a VERY simple functional component
   // ? componentDidMount() {
@@ -78,12 +34,19 @@ class App extends MyReactComponent {
 
   // ??? NEW
   render() {
-    return (
-      <div>
-        <CatalogCtrl/>
-        {/* ??? L8TR other dialogs */}
-      </div>
-    )
+
+    const { openCartFn } = this.props;
+
+    return <div>
+             <span className="cartButton">
+               <a onClick={this.props.openCartFn}>Cart</a>
+             </span>
+             <CatalogCtrl/>
+
+             {/* NOTE: Even though the following modal dialogs are injected here,
+                       internally they are conditionally rendered ONLY when needed! */}
+             <Cart/>
+           </div>
   }
 
 
@@ -94,18 +57,9 @@ class App extends MyReactComponent {
   // ?   return (
   // ?     <div>
   // ?       ??? OTHER DIALOGS
-  // ?       { cartOpen && this.renderCartDialog() }
   // ?       { checkoutOpen && this.renderCheckoutDialog() }
   // ?       { receiptId && this.renderReceiptDialog() } {/* KJB: auto render receipt dialog, when checkout defines a receiptId  */}
   // ? 
-  // ?       ??? THIS TOO
-  // ?       <span className="cartButton">
-  // ?         <a onClick={this.toggleCartDisplayed}>Cart</a>
-  // ?       </span>
-  // x 
-  // x       <Catalog items={filteredItems}
-  // x                itemExpanded={itemExpanded}
-  // x                buyFn={this.buyItem}
   // x     </div>
   // x   );
   // x }
@@ -117,22 +71,6 @@ class App extends MyReactComponent {
   // ? // *** Cart related ...
   // ? // ***
   // ? 
-  // ? renderCartDialog() {
-  // ?   const cartItems = this.state.cartItems;
-  // ?   return (
-  // ?     <Cart cartItems={cartItems}
-  // ?           closeFn={this.toggleCartDisplayed}
-  // ?           removeItemFn={this.removeItem}
-  // ?           changeQtyFn={this.changeQty}
-  // ?           checkoutFn={total =>
-  // ?             this.setState({checkoutOpen:true,  /* open checkout ... kinda new showCheckoutDialog() */
-  // ?                            total: total        /* with this total */}) } />
-  // ?   );
-  // ? }
-  // ? 
-  // ? toggleCartDisplayed() {
-  // ?   this.setState({ cartOpen: !this.state.cartOpen });
-  // ? }
   // ? 
   // ? removeItem(cartItem) {
   // ?   // filter out all but supplied item
@@ -191,39 +129,6 @@ class App extends MyReactComponent {
   // ?   //      our input form field (defined in our event as: e.target.name)
   // ?   console.log(`SETTING: '${e.target.name}' TO: '${e.target.value}' `);
   // ?   this.setState({ [e.target.name]: e.target.value }); // KJB: use new ES6 feature: Computed Property Keys in our JSON
-  // ? }
-  // ? 
-  // ? // buy selected item
-  // ? // ... either place in our shopping cart (on first occurrance), or increment quantity (when item is already in cart)
-  // ? // ... NOTE: KEY: this is where item is morphed into a cartItem
-  // ? buyItem(item) { // NOTE: item is a raw item (from Catalog), NOT a cartItem
-  // ?   // KJB: We want to setState with a new array of cartItems (because of our immutable state)
-  // ?   //      ... we can re-use array elms (if they do not change)
-  // ?   // KJB: This kjb version will NOT force existing cartItems to be at end
-  // ? 
-  // ?   // clone cartItems state array, identifying location of desired item (if present)
-  // ?   let itemIndx = -1;
-  // ?   const _cartItems = this.state.cartItems.filter( (x,indx) => {
-  // ?     if (item.id === x.id)
-  // ?       itemIndx = indx;
-  // ?     return true; // retain all items
-  // ?   });
-  // ? 
-  // ?   // if desired item is NOT present, inject new cartItem at end
-  // ?   if (itemIndx === -1) {
-  // ?     _cartItems.push( Object.assign({}, item, {qty: 0}) ); // NOTE: we morph a regular item into a cartItem here <KEY>!
-  // ?     itemIndx = _cartItems.length - 1;
-  // ?   }
-  // ? 
-  // ?   // increment our quantity
-  // ?   _cartItems[itemIndx].qty++;
-  // ? 
-  // ?   // retain our state new state
-  // ?   this.setState({
-  // ?     cartOpen:     true,       // open cart
-  // ?     cartItems:    _cartItems, // our new array with new cartItem or incremented qty
-  // ?     itemExpanded: null        // close expansion (when expanded)
-  // ?   });
   // ? }
   // ? 
   // ? closeCheckoutDialog() {
@@ -294,5 +199,34 @@ class App extends MyReactComponent {
   // ? }
 
 }
+
+
+
+
+
+//***
+//*** wrap our internal App$ class with a App wrapper that injects properties
+//*** (both data and behavior) from our state
+//***
+
+const mapStateToProps = (appState, ownProps) => {
+  return {
+  }
+}
+
+const mapDispatchToProps = (dispatch, ownProps) => {
+  return {
+    openCartFn: () =>  { dispatch(AC.openCart()) },
+  }
+}
+
+const App = connect(mapStateToProps, mapDispatchToProps)(App$)
+  // NOTE: This renders a single sub-component <App$> with the props defined above
+  //        ex:      <App/>
+  //        renders: <App><App$ prop1=xxx onClick=xxx/></App>
+
+  // define expected props
+  App.propTypes = {
+  }
 
 export default App;

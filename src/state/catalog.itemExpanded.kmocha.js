@@ -47,6 +47,23 @@ describe('appState.catalog.itemExpanded reducer tests', () => {
           .toNotBe(curState) // immutable
   })
 
+  // ??? may NOT be needed, since in our retrofit other usage of ItemRow will ignore expansion
+  // ? it('handle collapse for AC.buyItem() Action', () => {
+  // ? 
+  // ?   const item1 = {id:1}
+  // ?   const item2 = {id:2}
+  // ? 
+  // ?   // transition expansion when buying any item
+  // ?   const curState  = item1;
+  // ?   const nextState = itemExpanded(curState, 
+  // ?                                  AC.buyItem(item2))
+  // ?   const expectedState = null
+  // ? 
+  // ?   expect(nextState)
+  // ?         .toEqual(expectedState)
+  // ?         .toNotBe(curState) // immutable
+  // ? })
+
   it('should ignore unrelated Actions', () => {
 
     const curState  = {id:1};

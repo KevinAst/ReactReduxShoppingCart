@@ -27,8 +27,8 @@ that structural depth is maintained to emphasize ownership.
   },
 
   cart: {             // our shopping cart
-??  visible:   false, // is cart dialog visible <boolean> ??? was cartOpen
-??  cartItems: [],    // shopping cart item list [ { ...item, qty: <int> } ]
+    visible:   false, // is cart dialog visible <boolean>
+    cartItems: [],    // shopping cart item list [ { ...item, qty: <int> } ]
   },
 
   checkout: {       // checkout data (for purchase)
@@ -126,6 +126,73 @@ through the React Context feature.
 The UI components were simplified, in the sense that the large set of
 detailed parameters are now minimized.  In many cases component
 parameters are completely eliminated.
+
+??? NEW START
+
+Prior to this refactor state and functionality filtered down from the
+top-level App component, by passing component properties.  The reason
+for this was that only the App component had access to the top-level
+state and the rudimentary setState() transformation mechnism.
+
+This property chain was very tedious.  You may have a 3rd or 4th level
+component that required a callback defined in the root App.  This made
+the property chain very combersome, as all components in the chain had
+to be aware of this ... in many cases intermediate components merely
+passing callbacks through to the next level.
+
+In our new approach, any component can have access to the app state.
+In addition, any component can dispatch well-defined business actions
+that formally alter the app state.
+
+We still utilize component properties internally (both data and
+behavior) to keep our React components simple, it's just that these
+properties are dynamically injected at the component level.  This can
+roughly be thought of as a type of Dependency Injection.
+
+In essance (where needed) we wrap an internal private component with a
+publicly promoted component that:
+ - has access to our Redux appState and dispatch()
+ - and dynamically injects the needed properties to the internal component
+
+These components can still have properties passed to them from their
+parent component, but this is used for finer grained control (not
+based on state), and is somewhat rare.  As an example <ItemRow> has to
+be told what item it is rendering (through the "item" property).  This
+can't be defined from state because there are many items, rather the
+parent <Catalog> iterates through all items generating an <ItemRow
+item={item}/> for each.
+
+In summary, if a component property is fundamentaly based on state, it
+can be handled internally. For other non-state characteristics, a
+property can be passed from parent to child.
+
+What makes this possible is two things:
+ - The redux mechnism to be able to connect to our state and it's dispatcher.
+ - The fact that we have well-defined business actions that formally transition our state
+
+The end result is the code is much easier to follow.  Parameter
+passing is minimized.  As a result "cause and effect" is more
+localized to a component ... you don't have to follow a long chain
+back to the source.  In addition, you no longer have a mish mash of
+business functions thrown together at the App level.  The logic is
+much more distributed (if you will).
+
+?? discuss some code examples As an example, in the old logic, the App
+component had a buyFunction() that had to be passed from <App> through
+<Catalog> through <ItemRow> where the Buy button exists.  Under the
+new refactored code, the App.buyFunction() is replaced with a ???
+Action, that can be directly dispatched from the <ItemRow> ... no
+fuss, no muss.
+
+??? look at some code where $ is post-fixed to an internal class
+    ?? the internal class is written as normal, with properties passed in
+    ?? the public wrapper class uses the react-redux connect() to inject
+       needed properties using appState and dispatch()
+
+
+??? NEW END
+
+
 
 Prior to this refactor, many components required a very large number
 of parameters, communicating both data and behavioral callbacks.  It

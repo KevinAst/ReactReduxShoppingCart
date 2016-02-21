@@ -4,7 +4,7 @@ import React         from 'react';
 import ItemRow       from './item-row';
 import { PropTypes } from 'react'
 
-function Catalog({items, itemExpanded, filterCategory, changeFilterCategory, buyFn}) {
+function Catalog({items, filterCategory, changeFilterCategory}) {
 
   const filteredItems = filterCategory ?
                           items.filter(item => item.category === filterCategory) :
@@ -26,8 +26,8 @@ function Catalog({items, itemExpanded, filterCategory, changeFilterCategory, buy
         { filteredItems.map(item => (
             <ItemRow key={item.id}
                      item={item}
-                     itemExpanded={itemExpanded}
-                     buyClickedFnOLD={ e => buyFn(item)}/>
+                     allowBuy={true}
+                     allowDetails={true}/>
           ))
         }
       </ul>
@@ -35,17 +35,11 @@ function Catalog({items, itemExpanded, filterCategory, changeFilterCategory, buy
   );
 }
 
-// ??? fix above
-// ?? buyClickedFn={() => buyFn(item)}
-
-
 // define expected props
 Catalog.propTypes = {
   items:                PropTypes.array.isRequired,
-  itemExpanded:         PropTypes.object,
-  filterCategory:       PropTypes.string,
-  changeFilterCategory: PropTypes.func.isRequired,
-  // ??? more
+  filterCategory:       PropTypes.string, // ??? this can come from appState.catalog.filterCategory
+  changeFilterCategory: PropTypes.func.isRequired, // ??? this can be just dispatch a new action
 }
 
 Catalog.CATEGORIES = ['Nature', 'React.js']; // filter categories to select from

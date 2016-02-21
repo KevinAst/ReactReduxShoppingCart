@@ -15,6 +15,10 @@ export const itemExpanded = (itemExpanded=null, action) => {
       // otherwise expand targeted item in action
       return itemExpanded && itemExpanded.id===action.item.id ? null : action.item
 
+    // ??? may NOT be needed, since in our retrofit other usage of ItemRow will ignore expansion
+    // ? case AT.BUY_ITEM:
+    // ?   return null  // implicitly contract details when when we buy the item
+
     default:
       return itemExpanded
   }

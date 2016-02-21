@@ -10,6 +10,21 @@ import * as AC from './actionCreators' // AC: Action Creators
 
 describe('actionCreators tests', () => {
 
+  it('test buyItem()', () => {
+    expect(AC.buyItem("MyItem"))
+          .toEqual({
+              type: AT.BUY_ITEM,
+              item: "MyItem",
+          })
+  })
+
+  it('test closeCart()', () => {
+    expect(AC.closeCart())
+          .toEqual({
+              type: AT.CLOSE_CART,
+          })
+  })
+
   it('test catalogItemsDefined()', () => {
     expect(AC.catalogItemsDefined([1,2,3]))
           .toEqual({
@@ -23,6 +38,13 @@ describe('actionCreators tests', () => {
           .toEqual({
               type:     AT.FILTER_CATALOG_CATEGORY,
               category: "MyCategory"
+          })
+  })
+
+  it('test openCart()', () => {
+    expect(AC.openCart())
+          .toEqual({
+              type: AT.OPEN_CART,
           })
   })
 
