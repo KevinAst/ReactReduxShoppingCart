@@ -42,6 +42,12 @@ export const cartItems = (cartItems=[], action) => {
 
 
 
+    case AT.REMOVE_CART_ITEM:
+
+      return cartItems.filter( (cartItem) => action.cartItem.id !== cartItem.id )
+
+
+
     default:
       return cartItems
   }

@@ -18,18 +18,18 @@ describe('actionCreators tests', () => {
           })
   })
 
-  it('test closeCart()', () => {
-    expect(AC.closeCart())
-          .toEqual({
-              type: AT.CLOSE_CART,
-          })
-  })
-
   it('test catalogItemsDefined()', () => {
     expect(AC.catalogItemsDefined([1,2,3]))
           .toEqual({
               type: AT.CATALOG_ITEMS_DEFINED,
               items: [1,2,3]
+          })
+  })
+
+  it('test closeCart()', () => {
+    expect(AC.closeCart())
+          .toEqual({
+              type: AT.CLOSE_CART,
           })
   })
 
@@ -45,6 +45,14 @@ describe('actionCreators tests', () => {
     expect(AC.openCart())
           .toEqual({
               type: AT.OPEN_CART,
+          })
+  })
+
+  it('test removeCartItem()', () => {
+    expect(AC.removeCartItem("MyItem"))
+          .toEqual({
+              type:     AT.REMOVE_CART_ITEM,
+              cartItem: "MyItem",
           })
   })
 

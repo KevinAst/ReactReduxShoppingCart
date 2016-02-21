@@ -40,7 +40,6 @@ describe('appState.cart.cartItems reducer tests', () => {
           .toNotBe(curState) // immutable
   })
 
-
   it('handle AC.setCartItemQty() Action', () => {
     const item5     = { id: 5, qty: 5 }
     const item6     = { id: 6, qty: 6 }
@@ -56,7 +55,19 @@ describe('appState.cart.cartItems reducer tests', () => {
           .toNotBe(curState) // immutable
   })
 
+  it('handle AC.removeCartItemQty() Action', () => {
+    const item5     = { id: 5, qty: 5 }
+    const item6     = { id: 6, qty: 6 }
+    const item7     = { id: 7, qty: 7 }
+    const curState  = [item5, item6, item7]
+    const nextState = cartItems(curState, 
+                                AC.removeCartItem(item6))
+    const expectedState = [ item5, item7]
 
+    expect(nextState)
+          .toEqual(expectedState)
+          .toNotBe(curState) // immutable
+  })
 
   it('should ignore unrelated Actions', () => {
     const curState      = [ { id: 56, qty: 1 }]

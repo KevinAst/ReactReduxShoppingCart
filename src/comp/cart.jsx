@@ -31,7 +31,6 @@ class Cart$ extends MyReactComponent { // our internal Cart$ class (wrapped with
   }
 
   render() {
-    // ??? insure all props are accurate and used
     const { visible, cartItems, closeCartFn, changeQtyFn, removeItemFn, checkoutFn } = this.props;
 
     // no-op when we are NOT visible
@@ -74,7 +73,7 @@ class Cart$ extends MyReactComponent { // our internal Cart$ class (wrapped with
                    onClick={e => changeQtyFn(cartItem, cartItem.qty-1)}></i>
               </span>
     
-              <button className="remove" onClick={e => removeItemFn(cartItem, e)} >Remove</button>
+              <button className="remove" onClick={e => removeItemFn(cartItem)} >Remove</button>
     
               <span className="lineTotal">
                 { formatMoney(unitPrice(cartItem.price, cartItem.qty)) }
@@ -106,8 +105,10 @@ const mapStateToProps = (appState, ownProps) => {
 
 const mapDispatchToProps = (dispatch, ownProps) => {
   return {
-    closeCartFn: ()              =>  { dispatch( AC.closeCart() ) },
-    changeQtyFn: (cartItem, qty) =>  { if (qty>=0) dispatch( AC.setCartItemQty(cartItem, qty) ) },
+    closeCartFn:  ()              =>  { dispatch( AC.closeCart() ) },
+    changeQtyFn:  (cartItem, qty) =>  { if (qty>=0) dispatch( AC.setCartItemQty(cartItem, qty) ) },
+    removeItemFn: (cartItem)      =>  { dispatch( AC.removeCartItem(cartItem) ) },
+    // checkoutFn ??? remains
   }
 }
 

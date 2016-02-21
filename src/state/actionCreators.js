@@ -14,16 +14,16 @@ export const buyItem = (item) => {
   }
 }
 
-export const closeCart = () => {
-  return {
-    type: AT.CLOSE_CART,
-  }
-}
-
 export const catalogItemsDefined = (items) => {
   return {
     type: AT.CATALOG_ITEMS_DEFINED,
     items,
+  }
+}
+
+export const closeCart = () => {
+  return {
+    type: AT.CLOSE_CART,
   }
 }
 
@@ -37,6 +37,13 @@ export const filterCatalogCategory = (category) => { // null for all
 export const openCart = () => {
   return {
     type: AT.OPEN_CART,
+  }
+}
+
+export const removeCartItem = (cartItem) => {
+  return {
+    type: AT.REMOVE_CART_ITEM,
+    cartItem,
   }
 }
 
