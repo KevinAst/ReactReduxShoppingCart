@@ -114,7 +114,7 @@ src/
 #### State Promotion
 
 The app state is a Redux store, and is promoted through the
-react-redux <Provider> component (see the bootstrap process in
+react-redux `<Provider>` component (see the bootstrap process in
 [src/browser.jsx](./src/browser.jsx)).  This makes the app state available to any
 component that monitors the Redux store (via the Redux-Redux connect()
 function).  Under the covers, this bit of magic is accomplished
