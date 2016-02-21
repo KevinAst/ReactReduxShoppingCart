@@ -17,12 +17,6 @@ import * as AC                   from '../state/actionCreators' // AC: Action Cr
 class Cart$ extends MyReactComponent { // our internal Cart$ class (wrapped with Cart below)
 
   componentDidMount() {
-    // TODO: ?? not quite right, as componentDidMount is invoked ONLY once, I assume due to the render() return null
-    // TODO: ?? may be easier just to put the conditional logic back in App
-    console.log("?? in         Cart.componentDidMount()")
-    if (!this.props.visible) // ... no-op when NOT visible (i.e. nothing rendered)
-      return;                // ... because we are still invoked even when nothing rendered (i.e. render() return null)
-    console.log("?? processing Cart.componentDidMount()")
     Esc.regEscHandler(this.props.closeCartFn);
   }
 
@@ -31,13 +25,8 @@ class Cart$ extends MyReactComponent { // our internal Cart$ class (wrapped with
   }
 
   render() {
-    const { visible, cartItems, closeCartFn, changeQtyFn, removeItemFn, checkoutFn } = this.props;
+    const { cartItems, closeCartFn, changeQtyFn, removeItemFn, checkoutFn } = this.props;
 
-    // no-op when we are NOT visible
-    if (!visible)
-      return null
-
-    // when we are visible, render away
     return (
       <div className="modal cart">
     
@@ -98,7 +87,6 @@ class Cart$ extends MyReactComponent { // our internal Cart$ class (wrapped with
 
 const mapStateToProps = (appState, ownProps) => {
   return {
-    visible:   appState.cart.visible,
     cartItems: appState.cart.cartItems,
   }
 }

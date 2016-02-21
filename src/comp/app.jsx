@@ -19,33 +19,16 @@ import * as AC          from '../state/actionCreators' // AC: Action Creators
 
 class App$ extends MyReactComponent { // our internal App$ class (wrapped with App below)
 
-  // ??? L8TR ??? I think this document handler can be accomplished globally in Esc ??? THIS WOULD render the App to be a VERY simple functional component
-  // ? componentDidMount() {
-  // ?   // register our master "keydown" event listener
-  // ?   // ... registered at document level, to monitor key events page wide
-  // ?   document.addEventListener('keydown', Esc.handleEscKey);
-  // ? }
-
-  // ??? L8TR
-  // ? componentWillUnmount() {
-  // ?   // register our master "keydown" event listener
-  // ?   document.removeEventListener('keydown', Esc.handleEscKey);
-  // ? }
-
-  // ??? NEW
   render() {
 
-    const { openCartFn } = this.props;
+    const { cartVisible, openCartFn } = this.props;
 
     return <div>
              <span className="cartButton">
                <a onClick={this.props.openCartFn}>Cart</a>
              </span>
              <Catalog/>
-
-             {/* NOTE: Even though the following modal dialogs are injected here,
-                       internally they are conditionally rendered ONLY when needed! */}
-             <Cart/>
+             { cartVisible && <Cart/> }
            </div>
   }
 
@@ -189,6 +172,7 @@ class App$ extends MyReactComponent { // our internal App$ class (wrapped with A
 
 const mapStateToProps = (appState, ownProps) => {
   return {
+    cartVisible: appState.cart.visible,
   }
 }
 
