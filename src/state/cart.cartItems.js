@@ -1,4 +1,4 @@
-'use strict';
+'use strict'
 
 import * as AT from './actionTypes'    // AT: Action Types
 
@@ -20,14 +20,27 @@ export const cartItems = (cartItems=[], action) => {
           return Object.assign({}, cartItem, {qty: cartItem.qty+1}) // new instance (because are immutable) with qty incremented
         }
         return cartItem // pass through other cartItems unchanged
-      });
+      })
 
       // when item is new to cart, inject a new cartItem at end
       if (!itemExistsInCart) {
-        _cartItems.push( Object.assign({}, action.item, {qty: 1}) ); // NOTE: we morph a regular item into a cartItem here <KEY>!
+        _cartItems.push( Object.assign({}, action.item, {qty: 1}) ) // NOTE: we morph a regular item into a cartItem here <KEY>!
       }
         
       return _cartItems
+
+
+
+    case AT.SET_CART_ITEM_QTY:
+
+      return cartItems.map( (cartItem) => {
+        if (action.cartItem.id === cartItem.id) {
+          return Object.assign({}, cartItem, {qty: action.qty}) // new instance (because are immutable) with qty adjustment
+        }
+        return cartItem // pass through other cartItems unchanged
+      })
+
+
 
     default:
       return cartItems

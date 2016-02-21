@@ -48,6 +48,15 @@ describe('actionCreators tests', () => {
           })
   })
 
+  it('test setCartItemQty()', () => {
+    expect(AC.setCartItemQty("MyItem", 55))
+          .toEqual({
+              type:     AT.SET_CART_ITEM_QTY,
+              cartItem: "MyItem",
+              qty:      55
+          })
+  })
+
   it('test toggleItemDetail()', () => {
     expect(AC.toggleItemDetail("MyItem"))
           .toEqual({

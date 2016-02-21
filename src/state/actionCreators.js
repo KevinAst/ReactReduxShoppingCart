@@ -40,6 +40,14 @@ export const openCart = () => {
   }
 }
 
+export const setCartItemQty = (cartItem, qty) => {
+  return {
+    type: AT.SET_CART_ITEM_QTY,
+    cartItem,
+    qty,
+  }
+}
+
 export const toggleItemDetail = (item) => {
   return {
     type: AT.TOGGLE_ITEM_DETAIL,

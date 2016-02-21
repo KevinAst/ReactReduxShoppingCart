@@ -68,28 +68,6 @@ class App$ extends MyReactComponent { // our internal App$ class (wrapped with A
   // ??? PULL IN ... IN DIFFERENT WAYS ... LATER
 
   // ? // ***
-  // ? // *** Cart related ...
-  // ? // ***
-  // ? 
-  // ? 
-  // ? removeItem(cartItem) {
-  // ?   // filter out all but supplied item
-  // ?   const _cartItems = this.state.cartItems.filter(x => cartItem.id !== x.id);
-  // ?   this.setState({ cartItems: _cartItems });
-  // ? }
-  // ? 
-  // ? changeQty(cartItem, nextQty) {
-  // ?   const _cartItems = this.state.cartItems.map(x => {
-  // ?     if (x.id === cartItem.id)
-  // ?       return Object.assign({}, x, { qty: nextQty });
-  // ?     else
-  // ?       return x;
-  // ?   });
-  // ?   this.setState({ cartItems: _cartItems });
-  // ? }
-  // ? 
-  // ? 
-  // ? // ***
   // ? // *** Buy/Checkout related ...
   // ? // ***
   // ? 
@@ -112,7 +90,7 @@ class App$ extends MyReactComponent { // our internal App$ class (wrapped with A
   // ?   };
   // ? 
   // ?   return (
-  // ?     <div className="checkoutModal">
+  // ?     <div className="checkoutModal"> ??? why can't these <div>s be inside of Checkout? ??? similar to how <Cart> does it
   // ?       <div className="checkoutContainer">
   // ?         <Checkout fields={fields}
   // ?                   updatedFn={this.updateCheckoutField}

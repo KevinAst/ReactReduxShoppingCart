@@ -17,8 +17,12 @@ import * as AC                   from '../state/actionCreators' // AC: Action Cr
 class Cart$ extends MyReactComponent { // our internal Cart$ class (wrapped with Cart below)
 
   componentDidMount() {
-    if (!this.visible) // ... no-op when NOT visible (i.e. nothing rendered)
-      return;
+    // TODO: ?? not quite right, as componentDidMount is invoked ONLY once, I assume due to the render() return null
+    // TODO: ?? may be easier just to put the conditional logic back in App
+    console.log("?? in         Cart.componentDidMount()")
+    if (!this.props.visible) // ... no-op when NOT visible (i.e. nothing rendered)
+      return;                // ... because we are still invoked even when nothing rendered (i.e. render() return null)
+    console.log("?? processing Cart.componentDidMount()")
     Esc.regEscHandler(this.props.closeCartFn);
   }
 
@@ -27,11 +31,11 @@ class Cart$ extends MyReactComponent { // our internal Cart$ class (wrapped with
   }
 
   render() {
-    const { visible, cartItems, closeCartFn, checkoutFn, removeItemFn, changeQtyFn } = this.props;
+    // ??? insure all props are accurate and used
+    const { visible, cartItems, closeCartFn, changeQtyFn, removeItemFn, checkoutFn } = this.props;
 
     // no-op when we are NOT visible
-    this.visible = visible // ... manage componentDidMount(), as it is still invoked on null render
-    if (!this.visible)
+    if (!visible)
       return null
 
     // when we are visible, render away
@@ -67,7 +71,7 @@ class Cart$ extends MyReactComponent { // our internal Cart$ class (wrapped with
                    onClick={e => changeQtyFn(cartItem, cartItem.qty+1)}></i>
                 <i className="fa fa-angle-double-down"
                    title="decrease quantity"
-                   onClick={e => {if (cartItem.qty>0) changeQtyFn(cartItem, cartItem.qty-1)}}></i>
+                   onClick={e => changeQtyFn(cartItem, cartItem.qty-1)}></i>
               </span>
     
               <button className="remove" onClick={e => removeItemFn(cartItem, e)} >Remove</button>
@@ -102,7 +106,8 @@ const mapStateToProps = (appState, ownProps) => {
 
 const mapDispatchToProps = (dispatch, ownProps) => {
   return {
-    closeCartFn: () =>  { dispatch(AC.closeCart()) },
+    closeCartFn: ()              =>  { dispatch( AC.closeCart() ) },
+    changeQtyFn: (cartItem, qty) =>  { if (qty>=0) dispatch( AC.setCartItemQty(cartItem, qty) ) },
   }
 }
 
