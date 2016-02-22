@@ -5,10 +5,9 @@ import { connect }      from 'react-redux'
 import MyReactComponent from '../util/my-react-component';
 import Catalog          from './catalog';
 import Cart             from './cart';
-// ? import Checkout         from './checkout';
+import Checkout         from './checkout';
 // ? import Receipt          from './receipt';
 // ? import shortid          from 'shortid';
-// ? import Esc              from './util/esc';
 import * as AC          from '../state/actionCreators' // AC: Action Creators
 
 
@@ -21,14 +20,15 @@ class App$ extends MyReactComponent { // our internal App$ class (wrapped with A
 
   render() {
 
-    const { cartVisible, openCartFn } = this.props;
+    const { cartVisible, checkoutVisible, openCartFn } = this.props;
 
     return <div>
              <span className="cartButton">
                <a onClick={this.props.openCartFn}>Cart</a>
              </span>
              <Catalog/>
-             { cartVisible && <Cart/> }
+             { cartVisible     && <Cart/> }
+             { checkoutVisible && <Checkout/> }
            </div>
   }
 
@@ -40,7 +40,6 @@ class App$ extends MyReactComponent { // our internal App$ class (wrapped with A
   // ?   return (
   // ?     <div>
   // ?       ??? OTHER DIALOGS
-  // ?       { checkoutOpen && this.renderCheckoutDialog() }
   // ?       { receiptId && this.renderReceiptDialog() } {/* KJB: auto render receipt dialog, when checkout defines a receiptId  */}
   // ? 
   // x     </div>
@@ -54,50 +53,11 @@ class App$ extends MyReactComponent { // our internal App$ class (wrapped with A
   // ? // *** Buy/Checkout related ...
   // ? // ***
   // ? 
-  // ? renderCheckoutDialog() {
-  // ?   const { total } = this.state;
-  // ? 
-  // ?   // fields to send to <Checkout> as a simple property object
-  // ?   // ... making it simpler to pass to CheckOut
-  // ?   const fields = {
-  // ?     addr1:      this.state.addr1,
-  // ?     addr2:      this.state.addr2,
-  // ?     city:       this.state.city,
-  // ?     state:      this.state.state,
-  // ?     zip:        this.state.zip,
-  // ?     email:      this.state.email,
-  // ?     creditCard: this.state.creditCard,
-  // ?     expiry:     this.state.expiry,
-  // ?     fullName:   this.state.fullName,
-  // ?     cvcode:     this.state.cvcode,
-  // ?   };
-  // ? 
-  // ?   return (
-  // ?     <div className="checkoutModal"> ??? why can't these <div>s be inside of Checkout? ??? similar to how <Cart> does it
-  // ?       <div className="checkoutContainer">
-  // ?         <Checkout fields={fields}
-  // ?                   updatedFn={this.updateCheckoutField}
-  // ?                   total={total}
-  // ?                   closeCheckoutFn={this.closeCheckoutDialog}
-  // ?                   saleCompletedFn={this.saleCompleted} />
-  // ?       </div>
-  // ?     </div>
-  // ?   );
-  // ? }
-  // ? 
   // ? updateCheckoutField(e) {
   // ?   // KJB: the property we wish to set is the same as the name of
   // ?   //      our input form field (defined in our event as: e.target.name)
   // ?   console.log(`SETTING: '${e.target.name}' TO: '${e.target.value}' `);
   // ?   this.setState({ [e.target.name]: e.target.value }); // KJB: use new ES6 feature: Computed Property Keys in our JSON
-  // ? }
-  // ? 
-  // ? closeCheckoutDialog() {
-  // ?   this.setState({ 
-  // ?     checkoutOpen: false,
-  // ?     creditCard:   null,      // clear sensitive state
-  // ?     cvcode:       null,      // clear sensitive state
-  // ?   });
   // ? }
   // ? 
   // ? saleCompleted() {
@@ -172,7 +132,8 @@ class App$ extends MyReactComponent { // our internal App$ class (wrapped with A
 
 const mapStateToProps = (appState, ownProps) => {
   return {
-    cartVisible: appState.cart.visible,
+    cartVisible:     appState.cart.visible,
+    checkoutVisible: appState.checkout.visible,
   }
 }
 

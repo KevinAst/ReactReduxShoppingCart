@@ -32,11 +32,10 @@ that structural depth is maintained to emphasize ownership.
   },
 
   checkout: {       // checkout data (for purchase)
-??  visible: false, // is checkout dialog visible <boolean> ??? was checkoutOpen
-??  total:   null,  // total amount being checked out <???>  ??? WAS: total
+    visible: false, // is checkout dialog visible <boolean>
+    total:   null,  // total amount being checked out <number>
 
-    // NOTE: These checkout.fields MUST MATCH the <Checkout> form field names
-??  fields: {
+    fields: {       // NOTE: These checkout.fields MUST MATCH the <Checkout> form field names
       addr1:      "", // <string>
       addr2:      "", // <string>
       city:       "", // <string>

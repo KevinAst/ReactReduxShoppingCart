@@ -33,6 +33,7 @@ class Cart$ extends MyReactComponent { // our internal Cart$ class (wrapped with
         <button className="continue"
                 onClick={closeCartFn}>Continue shopping</button>
     
+        {/* ??? is e param really needed (in onClick below) */}
         <button className="checkout"
                 onClick={e => checkoutFn(totalItems(cartItems), e)}
                 disabled={totalItems(cartItems) <= 0}>Checkout</button>
@@ -96,7 +97,7 @@ const mapDispatchToProps = (dispatch, ownProps) => {
     closeCartFn:  ()              =>  { dispatch( AC.closeCart() ) },
     changeQtyFn:  (cartItem, qty) =>  { if (qty>=0) dispatch( AC.setCartItemQty(cartItem, qty) ) },
     removeItemFn: (cartItem)      =>  { dispatch( AC.removeCartItem(cartItem) ) },
-    // checkoutFn ??? remains
+    checkoutFn:   (total)         =>  { dispatch( AC.checkout(total) ) },
   }
 }
 

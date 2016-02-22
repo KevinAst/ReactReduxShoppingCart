@@ -26,10 +26,25 @@ describe('actionCreators tests', () => {
           })
   })
 
+  it('test checkout()', () => {
+    expect(AC.checkout(123))
+          .toEqual({
+              type:  AT.CHECKOUT,
+              total: 123
+          })
+  })
+
   it('test closeCart()', () => {
     expect(AC.closeCart())
           .toEqual({
               type: AT.CLOSE_CART,
+          })
+  })
+
+  it('test closeCheckout()', () => {
+    expect(AC.closeCheckout())
+          .toEqual({
+              type: AT.CLOSE_CHECKOUT,
           })
   })
 
@@ -62,6 +77,15 @@ describe('actionCreators tests', () => {
               type:     AT.SET_CART_ITEM_QTY,
               cartItem: "MyItem",
               qty:      55
+          })
+  })
+
+  it('test setCheckoutField()', () => {
+    expect(AC.setCheckoutField("MyName", "MyValue"))
+          .toEqual({
+              type:  AT.SET_CHECKOUT_FIELD,
+              name:  "MyName",
+              value: "MyValue"
           })
   })
 

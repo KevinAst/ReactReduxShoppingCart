@@ -21,9 +21,22 @@ export const catalogItemsDefined = (items) => {
   }
 }
 
+export const checkout = (total) => {
+  return {
+    type: AT.CHECKOUT,
+    total,
+  }
+}
+
 export const closeCart = () => {
   return {
     type: AT.CLOSE_CART,
+  }
+}
+
+export const closeCheckout = () => {
+  return {
+    type: AT.CLOSE_CHECKOUT,
   }
 }
 
@@ -52,6 +65,14 @@ export const setCartItemQty = (cartItem, qty) => {
     type: AT.SET_CART_ITEM_QTY,
     cartItem,
     qty,
+  }
+}
+
+export const setCheckoutField = (name, value) => {
+  return {
+    type: AT.SET_CHECKOUT_FIELD,
+    name,
+    value,
   }
 }
 
