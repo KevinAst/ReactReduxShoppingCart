@@ -28,6 +28,17 @@ describe('appState.checkout.total reducer tests', () => {
           .toNotBe(curState) // immutable
   })
 
+  it('handle AC.saleComplete() Action', () => {
+    const curState  = 55
+    const nextState = total(curState, 
+                            AC.saleComplete([1,2,3]))
+    const expectedState = null
+
+    expect(nextState)
+          .toEqual(expectedState)
+          .toNotBe(curState) // immutable
+  })
+
   it('should ignore unrelated Actions', () => {
 
     const curState      = 789

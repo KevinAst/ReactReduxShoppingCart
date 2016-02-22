@@ -48,6 +48,12 @@ export const cartItems = (cartItems=[], action) => {
 
 
 
+    case AT.SALE_COMPLETE:
+
+      return []
+
+
+
     default:
       return cartItems
   }

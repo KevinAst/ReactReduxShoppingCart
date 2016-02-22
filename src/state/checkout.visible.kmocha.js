@@ -40,6 +40,18 @@ describe('appState.checkout.visible reducer tests', () => {
           .toNotBe(curState) // immutable
   })
 
+  it('handle AC.saleComplete() Action', () => {
+
+    const curState      = true
+    const nextState     = visible(curState, 
+                                  AC.saleComplete([1,2,3]))
+    const expectedState = false
+
+    expect(nextState)
+          .toEqual(expectedState)
+          .toNotBe(curState) // immutable
+  })
+
   it('should ignore unrelated Actions', () => {
 
     const curState      = true

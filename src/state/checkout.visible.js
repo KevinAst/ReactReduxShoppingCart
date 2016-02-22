@@ -16,6 +16,9 @@ export const visible = (visible=false, action) => {
     case AT.CLOSE_CHECKOUT:
       return false
 
+    case AT.SALE_COMPLETE:
+      return false
+
     default:
       return visible
   }

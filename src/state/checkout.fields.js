@@ -11,6 +11,7 @@ export const fields = (fields={}, action) => {
   switch (action.type) {
 
     case AT.CLOSE_CHECKOUT:
+    case AT.SALE_COMPLETE:
       return Object.assign({}, fields, {
                creditCard: null, // clear sensitive data
                cvcode:     null, // clear sensitive data

@@ -68,7 +68,7 @@ class Checkout$ extends MyReactComponent {
   }
 
   render() {
-    const { fields, total, closeCheckoutFn, updateFieldFn, saleCompletedFn} = this.props;
+    const { fields, total, cartItems, closeCheckoutFn, updateFieldFn, saleCompletedFn} = this.props;
 
     const { validationState } = this.state;
 
@@ -146,7 +146,7 @@ class Checkout$ extends MyReactComponent {
                     () => { // callback of setState() to be executed once state has been applied and rendered
 
                       if (this.checkoutSchema.isValid()) {
-                        saleCompletedFn();
+                        saleCompletedFn(cartItems);
                       }
                       else {
                         // give focus to first invalid field
@@ -328,8 +328,9 @@ function pad2(amt) {
 
 const mapStateToProps = (appState, ownProps) => {
   return {
-    fields: appState.checkout.fields,
-    total:  appState.checkout.total,
+    fields:    appState.checkout.fields,
+    total:     appState.checkout.total,
+    cartItems: appState.cart.cartItems,
   }
 }
 
@@ -337,7 +338,7 @@ const mapDispatchToProps = (dispatch, ownProps) => {
   return {
     closeCheckoutFn: (e) => { dispatch(AC.closeCheckout()) },
     updateFieldFn:   (e) => { dispatch(AC.setCheckoutField(e.target.name, e.target.value)) },
-    saleCompletedFn: (e) => { console.log("??? TODO: saleCompletedFn") }, // transition to receipt once process button clicked and all fields are valid
+    saleCompletedFn: (cartItems) => { dispatch(AC.saleComplete(cartItems)) },
   }
 }
 

@@ -1,6 +1,7 @@
 'use strict';
 
-import * as AT from './actionTypes'    // AT: Action Types
+import shortid   from 'shortid';
+import * as AT   from './actionTypes'    // AT: Action Types
 
 
 // ***
@@ -40,6 +41,12 @@ export const closeCheckout = () => {
   }
 }
 
+export const closeReceipt = () => {
+  return {
+    type: AT.CLOSE_RECEIPT,
+  }
+}
+
 export const filterCatalogCategory = (category) => { // null for all
   return {
     type: AT.FILTER_CATALOG_CATEGORY,
@@ -57,6 +64,14 @@ export const removeCartItem = (cartItem) => {
   return {
     type: AT.REMOVE_CART_ITEM,
     cartItem,
+  }
+}
+
+export const saleComplete = (cartItems) => {
+  return {
+    type:         AT.SALE_COMPLETE,
+    receiptId:    shortid.generate(),
+    receiptItems: cartItems,
   }
 }
 

@@ -48,6 +48,13 @@ describe('actionCreators tests', () => {
           })
   })
 
+  it('test closeReceipt()', () => {
+    expect(AC.closeReceipt())
+          .toEqual({
+              type: AT.CLOSE_RECEIPT,
+          })
+  })
+
   it('test filterCatalogCategory()', () => {
     expect(AC.filterCatalogCategory("MyCategory"))
           .toEqual({

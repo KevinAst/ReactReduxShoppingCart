@@ -4,19 +4,19 @@ import * as AT from './actionTypes'    // AT: Action Types
 
 
 // ***
-// *** appState.checkout.total reducer
+// *** appState.receipt.id reducer
 // ***
 
-export const total = (total=0, action) => {
+export const id = (id=null, action) => {
   switch (action.type) {
 
-    case AT.CHECKOUT:
-      return action.total
-
     case AT.SALE_COMPLETE:
+      return action.receiptId
+
+    case AT.CLOSE_RECEIPT:
       return null
 
     default:
-      return total
+      return id
   }
 }

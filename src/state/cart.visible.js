@@ -19,6 +19,9 @@ export const visible = (visible=false, action) => {
     case AT.BUY_ITEM:
       return true     // implicitly show cart when we buy the item
 
+    case AT.SALE_COMPLETE:
+      return false
+
     default:
       return visible
   }

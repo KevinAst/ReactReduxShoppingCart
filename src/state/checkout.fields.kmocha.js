@@ -28,6 +28,18 @@ describe('appState.checkout.fields reducer tests', () => {
           .toNotBe(curState) // immutable
   })
 
+  it('handle AC.saleComplete() Action', () => {
+
+    const curState      = { a: 111, creditCard: "123", cvcode: "456", z:999 }
+    const expectedState = { a: 111, creditCard: null,  cvcode: null,  z:999 } // clear sensitive data
+    const nextState     = fields(curState, 
+                                 AC.saleComplete([1,2,3]))
+
+    expect(nextState)
+          .toEqual(expectedState)
+          .toNotBe(curState) // immutable
+  })
+
   it('handle AC.setCheckoutField() Action', () => {
 
     const curState      = { a: 111, creditCard: "123", cvcode: "456", z:999 }
