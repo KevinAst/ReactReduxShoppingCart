@@ -20,10 +20,10 @@ that structural depth is maintained to emphasize ownership.
 
 ```javascript
 {
-  catalog: {               // our catalog of items which can be purchased
-    items:          [],    // items list [ { id: <int>, name: <string>, price: <int>, img: <string>, category: <string>, desc: <string>, details: <string> ]
-    filterCategory: null,  // item filter category <String> "" for show all
-    itemExpanded:   null,  // item to expand {...item} null for no expansion
+  catalog: {              // our catalog of items which can be purchased
+    items:          [],   // items list [ { id: <int>, name: <string>, price: <int>, img: <string>, category: <string>, desc: <string>, details: <string> ]
+    filterCategory: null, // item filter category <String> "" for show all
+    itemExpanded:   null, // item to expand {...item} null for no expansion
   },
 
   cart: {             // our shopping cart
@@ -35,7 +35,7 @@ that structural depth is maintained to emphasize ownership.
     visible: false, // is checkout dialog visible <boolean>
     total:   null,  // total amount being checked out <number>
 
-    fields: {       // NOTE: These checkout.fields MUST MATCH the <Checkout> form field names
+    fields: {     // NOTE: These checkout.fields MUST MATCH the <Checkout> form field names
       addr1:      "", // <string>
       addr2:      "", // <string>
       city:       "", // <string>
@@ -49,9 +49,9 @@ that structural depth is maintained to emphasize ownership.
     }
   },
 
-  receipt: {         // our shopping receipt
-??  id:        null, // receipt id <???> ??? was receiptId
-??  cartItems: [],   // receipt item list [ { ...cartItems } ] ??? was receiptItems
+  receipt: {      // our shopping receipt
+    id:           null, // receipt id <string> ... when supplied, receipt dialog is visualized
+    receiptItems: [],   // receipt item list [ { ...cartItems } ]
   }
 
 }
