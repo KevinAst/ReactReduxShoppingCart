@@ -87,26 +87,35 @@ structure of the reducers match our overall state.
 src/
   state/
     actionTypes.js .............. all action types (defined constants)
-
     actionCreators.js ........... all action creators
-    actionCreators.kmocha.js
 
     appState.js ................. appState top-level reducer (a Redux combineReducer)
 
     catalog.js .................. appState.catalog reducer (a Redux combineReducer)
-
-    catalog.items.js ............ appState.catalog.items reducer
-    catalog.items.kmocha.js
-
-    catalog.filterCategory.js ... appState.catalog.filterCategory reducer
-    catalog.filterCategorykmocha..js
-
-    catalog.itemExpanded.js ..... appState.catalog.itemExpanded reducer
-    catalog.itemExpanded.kmocha.js
+    catalog.items.js
+    catalog.filterCategory.js
+    catalog.itemExpanded.js
 
     cart.js ..................... appState.cart reducer (a Redux combineReducer)
+    cart.cartItems.js
+    cart.visible.js
 
-    ... etc. etc. etc.
+    catalog.js .................. appState.catalog reducer (a Redux combineReducer)
+    catalog.filterCategory.js
+    catalog.itemExpanded.js
+    catalog.items.js
+
+    checkout.js ................. appState.checkout reducer (a Redux combineReducer)
+    checkout.fields.js
+    checkout.total.js
+    checkout.visible.js
+
+    receipt.js .................. appState.receipt reducer (a Redux combineReducer)
+    receipt.id.js
+    receipt.receiptItems.js
+
+    test/ ....................... all state transition tests
+      ... etc.
 ```
 
 

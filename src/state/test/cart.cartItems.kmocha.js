@@ -1,8 +1,8 @@
 'use strict'
 
-import { expect }    from '../util/karma-setup'
-import { cartItems } from './cart.cartItems'
-import * as AC       from './actionCreators' // AC: Action Creators
+import { expect }    from '../../util/karma-setup'
+import { cartItems } from '../cart.cartItems'
+import * as AC       from '../actionCreators' // AC: Action Creators
 
 
 // ***

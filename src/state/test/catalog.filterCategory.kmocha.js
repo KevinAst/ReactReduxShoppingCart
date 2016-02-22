@@ -1,8 +1,8 @@
 'use strict';
 
-import { expect }         from '../util/karma-setup';
-import { filterCategory } from './catalog.filterCategory'
-import * as AC            from './actionCreators' // AC: Action Creators
+import { expect }         from '../../util/karma-setup';
+import { filterCategory } from '../catalog.filterCategory'
+import * as AC            from '../actionCreators' // AC: Action Creators
 
 
 // ***
