@@ -1,6 +1,7 @@
 'use strict';
 
 import React           from 'react';
+import { PropTypes }   from 'react'
 import { formatMoney } from 'accounting';
 
 // ***
@@ -18,10 +19,9 @@ const ItemDetails = ({item}) => {
 }
 
 
-// define expected props ??? requires item
-// ? ItemDetails.propTypes = {
-// ?   filter:   PropTypes.string.isRequired,
-// ?   children: PropTypes.node.isRequired,
-// ? }
+// define expected props
+ItemDetails.propTypes = {
+  item: PropTypes.object.isRequired,
+}
 
 export default ItemDetails;

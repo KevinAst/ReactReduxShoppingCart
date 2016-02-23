@@ -13,7 +13,7 @@ import * as AC         from '../state/actionCreators' // AC: Action Creators
 // ***
 
 // our internal ItemRow$ class (wrapped with ItemRow below)
-const ItemRow$ = ({item, itemExpanded, allowDetails, toggleItemDetailFn, allowBuy, buyItemFn, children}) => {
+const ItemRow$ = ({item, allowDetails, allowBuy, itemExpanded, toggleItemDetailFn, buyItemFn, children}) => {
 
   const genDetails = () => {
     if (!allowDetails)
