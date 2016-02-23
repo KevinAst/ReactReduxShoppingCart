@@ -34,9 +34,8 @@ class Cart$ extends MyReactComponent {
         <button className="continue"
                 onClick={closeCartFn}>Continue shopping</button>
     
-        {/* ??? is e param really needed (in onClick below) */}
         <button className="checkout"
-                onClick={e => checkoutFn(totalItems(cartItems), e)}
+                onClick={e => checkoutFn(totalItems(cartItems))}
                 disabled={totalItems(cartItems) <= 0}>Checkout</button>
     
         <h1>Cart</h1>
