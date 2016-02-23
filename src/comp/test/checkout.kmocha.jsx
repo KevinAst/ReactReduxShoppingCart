@@ -6,8 +6,8 @@ import { formatMoney }  from 'accounting';
 import { appState }     from '../../state/appState'
 import { Provider }     from 'react-redux'
 import { createStore }  from 'redux'
-import * as AC          from '../../state/actionCreators' // AC: Action Creators
-const DATA = require('../../../public/fake-api.json'); // KJB: same fixture data browser sync is serving
+import * as AC          from '../../state/actionCreators'
+const DATA = require('../../../public/fake-api.json'); // same fixture data browser sync is serving
 
 
 describe('Checkout Tests', function () {

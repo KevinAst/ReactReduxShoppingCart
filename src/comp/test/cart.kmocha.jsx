@@ -1,13 +1,13 @@
 'use strict';
 
 import { expect, React, ReactDOM, TestUtils }  from '../../util/karma-setup';
-import App              from '../app'; // KJB: component under test
+import App              from '../app';
 import { formatMoney }  from 'accounting';
-import { appState }     from '../../state/appState'       // our app-wide reducer
+import { appState }     from '../../state/appState' // our app-wide reducer
 import { Provider }     from 'react-redux'
 import { createStore }  from 'redux'
-import * as AC          from '../../state/actionCreators' // AC: Action Creators
-const DATA = require('../../../public/fake-api.json'); // KJB: same fixture data browser sync is serving
+import * as AC          from '../../state/actionCreators'
+const DATA = require('../../../public/fake-api.json'); // same fixture data browser sync is serving
 
 
 describe('cart', function () {

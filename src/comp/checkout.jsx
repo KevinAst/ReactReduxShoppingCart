@@ -9,7 +9,7 @@ import { formatMoney }   from 'accounting';
 import MyReactComponent  from '../util/my-react-component';
 import USStates          from '../util/USStates';
 import Esc               from '../util/esc';
-import * as AC           from '../state/actionCreators' // AC: Action Creators
+import * as AC           from '../state/actionCreators'
 
 
 // ***

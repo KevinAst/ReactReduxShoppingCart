@@ -1,6 +1,6 @@
 'use strict';
 
-import * as AT             from './actionTypes'    // AT: Action Types
+import * as AT             from './actionTypes'
 import { combineReducers } from 'redux'
 import { items }           from './catalog.items'
 import { filterCategory }  from './catalog.filterCategory'

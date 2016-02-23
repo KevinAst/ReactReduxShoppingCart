@@ -1,8 +1,8 @@
 'use strict';
 
 import { expect } from '../../util/karma-setup';
-import * as AT from '../actionTypes'    // AT: Action Types
-import * as AC from '../actionCreators' // AC: Action Creators
+import * as AT from '../actionTypes'
+import * as AC from '../actionCreators'
 
 // ***
 // *** all actionCreators tests ...

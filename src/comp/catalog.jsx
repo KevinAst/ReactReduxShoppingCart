@@ -4,7 +4,7 @@ import React         from 'react';
 import ReduxUtil     from '../util/redux-util'
 import { PropTypes } from 'react'
 import ItemRow       from './item-row';
-import * as AC       from '../state/actionCreators' // AC: Action Creators
+import * as AC       from '../state/actionCreators'
 
 
 // ***

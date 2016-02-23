@@ -6,7 +6,7 @@ import Catalog   from './catalog';
 import Cart      from './cart';
 import Checkout  from './checkout';
 import Receipt   from './receipt';
-import * as AC   from '../state/actionCreators' // AC: Action Creators
+import * as AC   from '../state/actionCreators'
 
 
 // ***
