@@ -4,7 +4,7 @@ import * as AT             from './actionTypes'    // AT: Action Types
 import { combineReducers } from 'redux'
 import { items }           from './catalog.items'
 import { filterCategory }  from './catalog.filterCategory'
-import { itemExpanded }    from './catalog.itemExpanded'
+import { expandedItemId }  from './catalog.expandedItemId'
 
 
 // ***
@@ -14,5 +14,5 @@ import { itemExpanded }    from './catalog.itemExpanded'
 export const catalog = combineReducers({
   items,
   filterCategory,
-  itemExpanded,
+  expandedItemId,
 })

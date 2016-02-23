@@ -13,18 +13,18 @@ import * as AC         from '../state/actionCreators' // AC: Action Creators
 // ***
 
 // our internal ItemRow$ class (wrapped with ItemRow below)
-const ItemRow$ = ({item, allowDetails, allowBuy, itemExpanded, toggleItemDetailFn, buyItemFn, children}) => {
+const ItemRow$ = ({item, allowDetails, allowBuy, expandedItemId, toggleItemDetailFn, buyItemFn, children}) => {
 
   const genDetails = () => {
     if (!allowDetails)
       return null; // no-op if details are NOT allowed
 
-    if (item === itemExpanded )
+    if (item.id === expandedItemId)
       return <span>
                <button>
                  Collapse Details
                </button>
-               <ItemDetails item={itemExpanded}/>
+               <ItemDetails item={item}/>
              </span>;
     else
       return <span>
@@ -61,7 +61,7 @@ const ItemRow$ = ({item, allowDetails, allowBuy, itemExpanded, toggleItemDetailF
 const ItemRow = ReduxUtil.wrapCompWithInjectedProps(ItemRow$, {
                   mapStateToProps: (appState, ownProps) => {
                     return {
-                      itemExpanded: appState.catalog.itemExpanded,
+                      expandedItemId: appState.catalog.expandedItemId,
                     }
                   },
                   mapDispatchToProps: (dispatch, ownProps) => {

@@ -23,7 +23,7 @@ that structural depth is maintained to emphasize ownership.
   catalog: {              // our catalog of items which can be purchased
     items:          [],   // items list [ { id: <int>, name: <string>, price: <int>, img: <string>, category: <string>, desc: <string>, details: <string> ]
     filterCategory: null, // item filter category <String> "" for show all
-    itemExpanded:   null, // item to expand {...item} null for no expansion
+    expandedItemId: null, // item id to expand <int>, null for no expansion
   },
 
   cart: {             // our shopping cart
@@ -94,28 +94,23 @@ src/
     catalog.js .................. appState.catalog reducer (a Redux combineReducer)
     catalog.items.js
     catalog.filterCategory.js
-    catalog.itemExpanded.js
+    catalog.expandedItemId.js
 
     cart.js ..................... appState.cart reducer (a Redux combineReducer)
-    cart.cartItems.js
     cart.visible.js
-
-    catalog.js .................. appState.catalog reducer (a Redux combineReducer)
-    catalog.filterCategory.js
-    catalog.itemExpanded.js
-    catalog.items.js
+    cart.cartItems.js
 
     checkout.js ................. appState.checkout reducer (a Redux combineReducer)
-    checkout.fields.js
-    checkout.total.js
     checkout.visible.js
+    checkout.total.js
+    checkout.fields.js
 
     receipt.js .................. appState.receipt reducer (a Redux combineReducer)
     receipt.id.js
     receipt.receiptItems.js
 
     test/ ....................... all state transition tests
-      ... etc.
+      ...
 ```
 
 
