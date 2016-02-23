@@ -1,22 +1,42 @@
-# ReactReduxShoppingCart
+# ReduxEvaluation
 
-This is a Redux version of the CodeWinds University React Shopping
-Cart Training Course (Jeff Barczewski http://codewinds.com/).
+## Overview
 
-This is a significant refactor for this app, maintaining application
-state through the Redux framework (a popular Flux implementation).
+This project is an evaluation of the
+[Redux](https://github.com/reactjs/redux/) framework (a popular
+[Flux](https://facebook.github.io/flux/) implementation).
+
+The app itself is a Shopping Cart, which is part of the
+[CodeWinds](http://codewinds.com/) [React](https://facebook.github.io/react/) 101 training course.
+
+The app has been implemented in two different ways (found in different
+branches of this project).  This allows you to directly compare the
+two different implementations.  The branches are:
+
+ - **PlainReact**: The original React app without Redux.  The top-level
+   `<App>` ??link component maintains application state, and contains
+   the function to alter this state.  Redux properties are trickled
+   down from this `<App>` component throughout the entire containment
+   tree.
+
+ - **ReduxReact**: A refactor of this same React app, utilizing the
+   Redux framework.
+
+
+What follows are the details of this Redux refactor.
+
 
 ## App State
 
-Our Shopping Cart app maintains a single persistent state, employing
-the Redux pattern of Actions and Reducers.  In essence these are
-business events, that drive our apps state transition.
+The Redux-refactored app maintains a single persistent store,
+employing the Redux pattern of Actions and Reducers.  In essence these
+are business events, that drive our apps state transition.
 
 
-#### State Specification
+### State Specification
 
-The complete specification of our app state is shown here.  Notice
-that structural depth is maintained to emphasize ownership.
+The complete specification of our app state is shown here. 
+
 
 ```javascript
 {
@@ -57,12 +77,59 @@ that structural depth is maintained to emphasize ownership.
 }
 ```
 
-#### State Transition
+Please notice that structural depth is maintained to emphasize
+ownership.  That is contrast to the original (non Redux)
+implementation:
+
+```javascript
+this.state = {
+  category:     null,  // filter category <String>
+  itemExpanded: null,  // item to expand
+
+
+  // ***
+  // *** state related to cart
+  // ***
+
+  cartOpen: false,
+  cartItems: [],
+
+
+  // ***
+  // *** state related to receipt
+  // ***
+
+  receiptId:    null,
+  receiptItems: [],   // type: cartItems (with qty)
+
+
+  // ***
+  // *** state related to checkout
+  // ***
+
+  checkoutOpen: false, // is the checkout dialog open?
+  total:        null,  // currency KJB: unsure yet how this is going to work
+
+  // NOTE: fields within our checkeout MUST match <Checkout> form field names
+  addr1:      "", // string
+  addr2:      "", // string
+  city:       "", // string
+  state:      "", // string
+  zip:        "", // string
+  email:      "", // string
+  creditCard: "", // string
+  expiry:     "", // string
+  fullName:   "", // string
+  cvcode:     "", // string
+}
+```
+
+### State Transition
 
 Our state definition/transition is maintained by a series of actions
-that are interpreted by a graph of reducers.  This in
-conjunction with the Redux dispatcher, provides a complete solution
-for maintaining our state.
+that are interpreted by a graph of reducers.  This in conjunction with
+the Redux dispatcher, provides a complete solution for maintaining our
+state.
 
 As an example, let's say you have an item who's detail should be
 expanded in our GUI.  You simply locate the desired action
@@ -71,17 +138,21 @@ and publish it with the Redux dispatch mechanism.  This task is
 accomplished in one line of code:
 
 ```javascript
-import * as AC from 'src/state/actionCreators' // AC: Action Creators
+import * as AC from 'src/state/actionCreators'
 ...
   dispatch(AC.toggleItemDetail(item))
 ```
 
 
-#### State Code
+### State Code
 
 The business logic that maintains the state definition/transition can
-be found in [src/state/](./src/state/).  Please note that the
-structure of the reducers match our overall state.
+be found in [src/state/](./src/state/).
+
+Please note that the structure of our state (shown above) is
+implicitly defined through our reducers, is is reflected by the
+javascript module names (below).
+
 
 ```
 src/
@@ -113,8 +184,7 @@ src/
       ...
 ```
 
-
-#### State Promotion
+### State Promotion
 
 The app state is a Redux store, and is promoted through the
 react-redux `<Provider>` component (see the bootstrap process in
@@ -135,7 +205,7 @@ pattern.
 Prior to this refactor state and functionality filtered down from the
 top-level App component, by passing component properties.  The reason
 for this was that only the App component had access to the top-level
-state and the rudimentary setState() transformation mechanism.
+state and the rudimentary React setState() transformation mechanism.
 
 This property chain was very tedious.  You may have a 3rd or 4th level
 component that required a callback defined in the root App.  This made
@@ -144,22 +214,24 @@ to be aware of this ... in many cases intermediate components merely
 passed callbacks through to the next level.
 
 In our new refactored approach:
- - Any component has access to the app state.
+ - All our components have access to the app state.
  - In addition, any component can dispatch well-defined business
    actions that formally alter the app state.
 
-We still utilize component properties internally (both data and
-behavior) to keep our React components simple.  It's just that these
-properties are dynamically injected at the component level.  This can
-roughly be thought of as a type of Dependency Injection.
+Under the covers, we still utilize component properties internally
+(both data and behavior) to keep our React components simple.  It's
+just that these properties are dynamically injected at the component
+level.  This can roughly be thought of as a type of Dependency
+Injection.
 
 In essence (where needed) we wrap an internal private component
 (e.g. Catalog$) with a publicly promoted component (e.g. Catalog)
 that:
  - has access to our Redux appState and dispatch()
- - and dynamically injects the needed properties to the internal component
+ - and dynamically injects the needed properties (both data and
+   behavior) to the internal component
 
-These components can still have public properties passed to them from their
+These components can still require public properties passed to them from their
 parent component, but this is used for finer-grained control that is
 not based on state, and is somewhat rare.  As an example `<ItemRow>` has
 to be told what item it is rendering (through the "item" property).
@@ -174,10 +246,6 @@ internal Catalog$).
 In summary, component property that are fundamentally based on state
 can be handled internally. For other non-state characteristics, a
 property can be passed from parent to child.
-
-This approach is made possible because of two factors:
- - Redux proves a technique where components may connect to our state and the dispatcher.
- - We have well-defined business actions that formally transition our state.
 
 As an example, in our old logic, the App component had an
 App.buyItemFn() function that had to be passed from `<App>` through
@@ -195,17 +263,15 @@ functions thrown together at the App level.  The logic is much more
 consistent following a well established repeating pattern.
 
 
-
-
-
 ## Time Travel
 
 Because our state is immutable, each transition can optionally be
-monitored, providing things like undo/redo etc.  I would highly
-recommend installing the Redux DevTools Chrome Extension (the app has
-been tooled to automatically hook to this extension when present).
-With this, you can monitor state transitions through the following
-means:
+monitored, providing things like undo/redo etc.  **I would highly
+recommend installing the Redux 
+[DevTools Chrome Extension](https://github.com/zalmoxisus/redux-devtools-extension)**
+(*the app has been tooled to automatically hook to this extension when
+present*).  With this, you can monitor state transitions through the
+following means:
 
 - Log Monitor: showing each Action and the new resulting state
 - Diff Monitor: showing each Action with a DIFF of the old/new state
@@ -219,29 +285,41 @@ means:
 
 ## Conclusion
 
-Within a React app, I would strongly suggest utilizing one of the Flux
-utilities.  The most popular and well-documented Flux library is
-Redux.
+Within any [React](https://facebook.github.io/react/) app, I would strongly suggest utilizing one of the 
+[Flux](https://facebook.github.io/flux/)
+patterns.  The most popular and well-documented Flux library is
+[Redux](https://github.com/reactjs/redux/).
 
-My experience here is that applying this framework not only simplified
-the code, but it brought order to what otherwise could very quickly
+This exercise has shown that applying Redux can significantly simplify
+your app, as well as bring order to what otherwise could very quickly
 turn into the "Wild Wild West".
 
 I disagree with the sentiment that says: "Don't use Flux till you need
-it" ([Pete Hunt's React
-HowTo](https://github.com/petehunt/react-howto)).
+it" ([Pete Hunt's React HowTo](https://github.com/petehunt/react-howto)).
 
-You can say the for "simple apps" it is an overkill, but when was the
+You can say that for "simple apps" it is an overkill, but when was the
 last time you wrote a "simple app"?  The shopping cart app is "pretty
 simple" (i.e. it is a training exercise), and yet in my estimation we
 greatly benefited from the Redux injection!
 
-The real development effort is in setting up the actions and reducers.
-While this may be somewhat tedious, it builds on a solid foundation
-that promotes consistency, which allows it to scale very well.  It
-also documents the total set of business functionality that can be
-easily unit tested.
+The real development effort is in setting up the 
+[actions](./src/state/actionCreators.js)
+and 
+[reducers](./src/state).
+Once you get accustomed to it, it is very straight forward.  Once your
+actions and reducers are in place, invoking the business functionality
+is a breeze (it's simply a matter of dispatching an action).
 
-Once your actions and reducers are in place, invoking the business
-functionality is a breeze (it's simply a matter of dispatching an
-action).
+ - It builds on a solid foundation that promotes consistency.
+ - It allows your app logic to scale extremely well.
+ - It can be easily unit tested.  
+ - It self-documents the total set of business functions that are
+   available.
+
+If you doubt me, I would challenge you to simply look at the
+before/after ??old/new-LINK src (from the two branches of this
+exercise).
+
+- for starters, look at the bootstrap process ... browser.jsx
+  (before/after) ??old/new link
+- then look at the top-level app.js source (before/after) ??old/new link
