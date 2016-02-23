@@ -1,7 +1,7 @@
 'use strict';
 
 import React                     from 'react'
-import { connect }               from 'react-redux'
+import ReduxUtil                 from '../util/redux-util'
 import MyReactComponent          from '../util/my-react-component'
 import ItemRow                   from './item-row' // NOTE: we re-use our ItemRow component
 import { formatMoney }           from 'accounting'
@@ -80,34 +80,26 @@ class Cart$ extends MyReactComponent {
 }
 
 
-
-
 //***
-//*** wrap our internal Cart$ class with a Cart wrapper that injects properties
-//*** (both data and behavior) from our state
+//*** wrap our internal Cart$ class with a public Cart class
+//*** that injects properties (both data and behavior) from our state.
 //***
 
-const mapStateToProps = (appState, ownProps) => {
-  return {
-    cartItems: appState.cart.cartItems,
-  }
-}
-
-const mapDispatchToProps = (dispatch, ownProps) => {
-  return {
-    closeCartFn:  ()              =>  { dispatch( AC.closeCart() ) },
-    changeQtyFn:  (cartItem, qty) =>  { if (qty>=0) dispatch( AC.setCartItemQty(cartItem, qty) ) },
-    removeItemFn: (cartItem)      =>  { dispatch( AC.removeCartItem(cartItem) ) },
-    checkoutFn:   (total)         =>  { dispatch( AC.checkout(total) ) },
-  }
-}
-
-// wrap internal Cart$ with public Cart
-// ... injecting needed properties
-// ... this renders a single sub-component <Cart$> with the props defined above
-//       ex:      <Cart/>
-//       renders: <Cart><Cart$ prop1=xxx onClick=xxx/></Cart>
-const Cart = connect(mapStateToProps, mapDispatchToProps)(Cart$)
+const Cart = ReduxUtil.wrapCompWithInjectedProps(Cart$, {
+               mapStateToProps: (appState, ownProps) => {
+                 return {
+                   cartItems: appState.cart.cartItems,
+                 }
+               },
+               mapDispatchToProps: (dispatch, ownProps) => {
+                 return {
+                   closeCartFn:  ()              =>  { dispatch( AC.closeCart() ) },
+                   changeQtyFn:  (cartItem, qty) =>  { if (qty>=0) dispatch( AC.setCartItemQty(cartItem, qty) ) },
+                   removeItemFn: (cartItem)      =>  { dispatch( AC.removeCartItem(cartItem) ) },
+                   checkoutFn:   (total)         =>  { dispatch( AC.checkout(total) ) },
+                 }
+               }
+             });
 
 // define expected props
 Cart.propTypes = {

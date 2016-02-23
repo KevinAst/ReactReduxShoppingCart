@@ -1,7 +1,7 @@
 'use strict';
 
 import React             from 'react';
-import { connect }       from 'react-redux'
+import ReduxUtil         from '../util/redux-util'
 import Select            from 'react-select';
 import Joi               from 'joi-browser';
 import AlmondJoi         from '../util/almond-joi';
@@ -321,38 +321,30 @@ function pad2(amt) {
 
 
 
-
 //***
-//*** wrap our internal Checkout$ class with a Checkout wrapper that injects properties
-//*** (both data and behavior) from our state
+//*** wrap our internal Checkout$ class with a public Checkout class
+//*** that injects properties (both data and behavior) from our state.
 //***
 
-const mapStateToProps = (appState, ownProps) => {
-  return {
-    fields:    appState.checkout.fields,
-    total:     appState.checkout.total,
-    cartItems: appState.cart.cartItems,
-  }
-}
-
-const mapDispatchToProps = (dispatch, ownProps) => {
-  return {
-    closeCheckoutFn: (e) => { dispatch(AC.closeCheckout()) },
-    updateFieldFn:   (e) => { dispatch(AC.setCheckoutField(e.target.name, e.target.value)) },
-    saleCompletedFn: (cartItems) => { dispatch(AC.saleComplete(cartItems)) },
-  }
-}
-
-// wrap internal Checkout$ with public Checkout
-// ... injecting needed properties
-// ... this renders a single sub-component <Checkout$> with the props defined above
-//       ex:      <Checkout/>
-//       renders: <Checkout><Checkout$ prop1=xxx onClick=xxx/></Checkout>
-const Checkout = connect(mapStateToProps, mapDispatchToProps)(Checkout$)
+const Checkout = ReduxUtil.wrapCompWithInjectedProps(Checkout$, {
+                   mapStateToProps: (appState, ownProps) => {
+                     return {
+                       fields:    appState.checkout.fields,
+                       total:     appState.checkout.total,
+                       cartItems: appState.cart.cartItems,
+                     }
+                   },
+                   mapDispatchToProps: (dispatch, ownProps) => {
+                     return {
+                       closeCheckoutFn: (e)         => { dispatch(AC.closeCheckout()) },
+                       updateFieldFn:   (e)         => { dispatch(AC.setCheckoutField(e.target.name, e.target.value)) },
+                       saleCompletedFn: (cartItems) => { dispatch(AC.saleComplete(cartItems)) },
+                     }
+                   }
+                 });
 
 // define expected props
 Checkout.propTypes = {
 }
-
 
 export default Checkout;

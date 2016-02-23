@@ -1,8 +1,8 @@
 'use strict';
 
 import React         from 'react';
+import ReduxUtil     from '../util/redux-util'
 import { PropTypes } from 'react'
-import { connect }   from 'react-redux'
 import ItemRow       from './item-row';
 import * as AC       from '../state/actionCreators' // AC: Action Creators
 
@@ -44,31 +44,24 @@ const Catalog$ = ({items, filterCategory, changeFilterCategory}) => {
 }
 
 
-
 //***
-//*** wrap our internal Catalog$ class with a Catalog wrapper that injects properties
-//*** (both data and behavior) from our state
+//*** wrap our internal Catalog$ class with a public Catalog class
+//*** that injects properties (both data and behavior) from our state.
 //***
 
-const mapStateToProps = (appState, ownProps) => {
-  return {
-    items:          appState.catalog.items,
-    filterCategory: appState.catalog.filterCategory,
-  }
-}
-
-const mapDispatchToProps = (dispatch, ownProps) => {
-  return {
-    changeFilterCategory: (category) => { dispatch(AC.filterCatalogCategory(category)) },
-  }
-}
-
-// wrap internal Catalog$ with public Catalog
-// ... injecting needed properties
-// ... this renders a single sub-component <Catalog$> with the props defined above
-//       ex:      <Catalog/>
-//       renders: <Catalog><Catalog$ prop1=xxx onClick=xxx/></Catalog>
-const Catalog = connect(mapStateToProps, mapDispatchToProps)(Catalog$)
+const Catalog = ReduxUtil.wrapCompWithInjectedProps(Catalog$, {
+                  mapStateToProps: (appState, ownProps) => {
+                    return {
+                      items:          appState.catalog.items,
+                      filterCategory: appState.catalog.filterCategory,
+                    }
+                  },
+                  mapDispatchToProps: (dispatch, ownProps) => {
+                    return {
+                      changeFilterCategory: (category) => { dispatch(AC.filterCatalogCategory(category)) },
+                    }
+                  }
+                });
 
 // define expected props
 Catalog.propTypes = {

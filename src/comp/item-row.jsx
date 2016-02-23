@@ -1,9 +1,9 @@
 'use strict';
 
 import React           from 'react';
+import ReduxUtil       from '../util/redux-util'
 import { PropTypes }   from 'react'
 import { formatMoney } from 'accounting';
-import { connect }     from 'react-redux'
 import ItemDetails     from './item-details';
 import * as AC         from '../state/actionCreators' // AC: Action Creators
 
@@ -53,31 +53,24 @@ const ItemRow$ = ({item, itemExpanded, allowDetails, toggleItemDetailFn, allowBu
 }
 
 
-
 //***
-//*** wrap our internal ItemRow$ class with a ItemRow wrapper that injects properties
-//*** (both data and behavior) from our state
+//*** wrap our internal ItemRow$ class with a public ItemRow class
+//*** that injects properties (both data and behavior) from our state.
 //***
 
-const mapStateToProps = (appState, ownProps) => {
-  return {
-    itemExpanded: appState.catalog.itemExpanded,
-  }
-}
-
-const mapDispatchToProps = (dispatch, ownProps) => {
-  return {
-    toggleItemDetailFn: (e) => { if (ownProps.allowDetails) dispatch(AC.toggleItemDetail(ownProps.item)) },
-    buyItemFn:          (e) => { if (ownProps.allowBuy)     dispatch(AC.buyItem(ownProps.item)) },
-  }
-}
-
-// wrap internal ItemRow$ with public ItemRow
-// ... injecting needed properties
-// ... this renders a single sub-component <ItemRow$> with the props defined above
-//       ex:      <ItemRow/>
-//       renders: <ItemRow><ItemRow$ prop1=xxx onClick=xxx/></ItemRow>
-const ItemRow = connect(mapStateToProps, mapDispatchToProps)(ItemRow$)
+const ItemRow = ReduxUtil.wrapCompWithInjectedProps(ItemRow$, {
+                  mapStateToProps: (appState, ownProps) => {
+                    return {
+                      itemExpanded: appState.catalog.itemExpanded,
+                    }
+                  },
+                  mapDispatchToProps: (dispatch, ownProps) => {
+                    return {
+                      toggleItemDetailFn: (e) => { if (ownProps.allowDetails) dispatch(AC.toggleItemDetail(ownProps.item)) },
+                      buyItemFn:          (e) => { if (ownProps.allowBuy)     dispatch(AC.buyItem(ownProps.item)) },
+                    }
+                  }
+                });
 
 // define expected props
 ItemRow.propTypes = {
