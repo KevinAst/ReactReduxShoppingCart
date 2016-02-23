@@ -2,16 +2,15 @@
 
 **Table of Contents**
 
-- [ReduxEvaluation](#)
-	- [Overview](#)
-	- [App State](#)
-		- [State Specification](#)
-		- [State Transition](#)
-		- [State Code](#)
-		- [State Promotion](#)
-	- [Simplified UI Components](#)
-	- [Time Travel](#)
-	- [Conclusion](#)
+- [Overview](#overview)
+- [App State](#app-state)
+  - [State Specification](#state-specification)
+  - [State Transition](#state-transition)
+  - [State Code](#state-code)
+  - [State Promotion](#state-promotion)
+- [Simplified UI Components](#simplified-ui-components)
+- [Time Travel](#time-travel)
+- [Conclusion](#conclusion)
 
 ## Overview
 
