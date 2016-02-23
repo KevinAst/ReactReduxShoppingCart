@@ -62,105 +62,9 @@ class Checkout$ extends MyReactComponent {
   }
 
   render() {
-    const { fields, total, cartItems, closeCheckoutFn, updateFieldFn, saleCompletedFn} = this.props;
-
-    // update our internal representation of a field change, and perform validation
-    const fieldChanged = (e, programmaticChange=false) => {
-      // update field data in our state
-      updateFieldFn(e);
-
-      // inform our validation schema that this field has changed
-      // ... stimulating deterministic validation
-      if (!programmaticChange)
-        this.checkoutSchema.fieldHasChanged(e.target.name);
-
-      // validate our fields, reflecting errors in our GUI
-      const updatedFields = // merge our current fields with this recent change
-        Object.assign({},
-                      fields,
-                      { [e.target.name]: e.target.value })
-      this.checkoutSchema.validate(updatedFields)
-    };
-
-    // perform validation when field has been visited (i.e. focus loss or blur)
-    // ... NOTE: this validaion can be conditional based on checkoutSchema heuristics
-    const fieldVisited = (e) => {
-
-      // inform our validation schema that this field has been visited
-      // ... stimulating deterministic validation
-      this.checkoutSchema.fieldHasBeenVisited(e.target.name);
-
-      // validate our fields, reflecting errors in our GUI
-      // NOTE: hopefully this is not a race condition
-      //       ... i.e. has our fields been updated by now (from onChange)?
-      //                I do not think it is
-      this.checkoutSchema.validate(fields)
-    };
-
-
-    // utility function to format our Credit Card (when it looses focus)
-    const creditCardVisited = (e) => {
-      // inform our validation schema that this field has been visited
-      // ... stimulating deterministic validation
-      this.checkoutSchema.fieldHasBeenVisited(e.target.name);
-
-      // format our credit card
-      fieldChanged({ target: {
-                       name:  e.target.name,
-                       value: formatCreditCard(e.target.value) }},
-                   true); // programmatic change (i.e. NOT user change)
-    };
-  
-    // utility function to format our Expiry Date (when it looses focus)
-    const expiryVisited = (e) => {
-      // inform our validation schema that this field has been visited
-      // ... stimulating deterministic validation
-      this.checkoutSchema.fieldHasBeenVisited(e.target.name);
-
-      // format our expiry
-      fieldChanged({ target: {
-                       name:  e.target.name,
-                       value: formatExpiry(e.target.value) }},
-                   true); // programmatic change (i.e. NOT user change)
-    };
-
-    // our purchase button was clicked
-    const purchaseClick = (e) => {
-
-      // prevent default handler from firing (in this case our form would do a submit)
-      e.preventDefault();
-
-      // perform validation ... on ALL fields in our form
-      const checkoutSchema = this.checkoutSchema;
-      checkoutSchema.activateAllValidation();
-      checkoutSchema.validate(fields);
-      if (checkoutSchema.isValid()) {
-        saleCompletedFn(cartItems);
-      }
-      else {
-        // give focus to first invalid field
-        this.refs[checkoutSchema.firstFieldInError()].focus();
-      }
-    };
-
-    // convenience function to generate <input> elm with overridable common properties
-    const inputTemplate = (fieldName, valueHeuristic, additionalProps) => {
-      const commonProps = {
-        name:             fieldName,
-        ref:              fieldName,
-        className:        this.inputClassNames(fieldName),
-        title:            this.fieldMsgTitle(fieldName),
-        [valueHeuristic]: fields[fieldName], // ... either value= or defaultValue=
-        onChange:         fieldChanged,
-        onBlur:           fieldVisited
-      };
-
-      const propsInUse = Object.assign({}, commonProps, additionalProps);
-
-      return <input {...propsInUse}/>;
-    };
-    const inputDefault = (fieldName, additionalProps) => inputTemplate(fieldName, "defaultValue", additionalProps);
-    const input        = (fieldName, additionalProps) => inputTemplate(fieldName, "value",        additionalProps);
+    // NOTE: for completeness, this represents a complete list of dependent properties, 
+    //       however some are used exclusively by other utility methods
+    const {fields, total, cartItems, closeCheckoutFn, updateFieldFn, saleCompletedFn} = this.props;
 
     return (
       <div className="checkoutModal">
@@ -179,21 +83,21 @@ class Checkout$ extends MyReactComponent {
           
                   <fieldset>
                     <legend>Shipping Address</legend>
-                    {inputDefault("addr1", {placeholder:"address line 1", autoFocus:"true", })}
-                    {inputDefault("addr2", {placeholder:"address line 2", })}
-                    {inputDefault("city",  {placeholder:"city", })}
+                    {this.inputDefault("addr1", {placeholder:"address line 1", autoFocus:"true", })}
+                    {this.inputDefault("addr2", {placeholder:"address line 2", })}
+                    {this.inputDefault("city",  {placeholder:"city", })}
                     <Select name="state" ref="state"
                             className={"state "+this.inputClassNames("state")}
                             title={this.fieldMsgTitle("state")} 
                             value={fields.state} options={USStates} 
-                            onChange={ (selVal) => { fieldChanged({ target: {name: "state", value: selVal} }) }}
-                            onBlur={   ()       => { fieldVisited({ target: {name: "state"}                }) }} />
-                    {inputDefault("zip",  {placeholder:"zip", })}
+                            onChange={ (selVal) => { this.fieldChanged({ target: {name: "state", value: selVal} }) }}
+                            onBlur={   ()       => { this.fieldVisited({ target: {name: "state"}                }) }} />
+                    {this.inputDefault("zip",  {placeholder:"zip", })}
                   </fieldset>
           
                   <fieldset>
                     <legend>Email</legend>
-                    {inputDefault("email", {placeholder:"Your email address", })}
+                    {this.inputDefault("email", {placeholder:"Your email address", })}
                   </fieldset>
                 </fieldset>
           
@@ -201,21 +105,21 @@ class Checkout$ extends MyReactComponent {
                   <legend>Credit Card</legend>
                   <label className="ccLabel">
                     <span>CardNumber</span>
-                    {input("creditCard", {placeholder:"1234 5678 90123", onBlur: creditCardVisited })}
+                    {this.input("creditCard", {placeholder:"1234 5678 90123", onBlur: this.creditCardVisited })}
                   </label>
                   <div className="meta">
                     <label>
                       <span>Expiry Date</span>
-                      {input("expiry", {placeholder:"mm/YY", onBlur: expiryVisited })}
+                      {this.input("expiry", {placeholder:"mm/YY", onBlur: this.expiryVisited })}
                     </label>
                     <label>
                       <span>Full Name</span>
-                      {inputDefault("fullName", {placeholder:"John Doe" })}
+                      {this.inputDefault("fullName", {placeholder:"John Doe" })}
                       
                     </label>
                     <label>
                       <span>CV Code</span>
-                      {input("cvcode", {placeholder:"123" })}
+                      {this.input("cvcode", {placeholder:"123" })}
                       {/*  KJB: ORIGINALLY DID NOT HAVE A VALUE AT ALL
                                   ... as a result if you close and open it always starts out blank
                                   ... AI: seems like on every re-render it would blank out constantly
@@ -230,7 +134,7 @@ class Checkout$ extends MyReactComponent {
                   </div>
                 </fieldset>
                 <button className="pay"
-                        onClick={purchaseClick}>
+                        onClick={this.purchaseClick}>
                   Pay
                 </button>
               </form>
@@ -240,6 +144,126 @@ class Checkout$ extends MyReactComponent {
         </div>
       </div>
     );
+  }
+
+
+  // update our internal representation of a field change, and perform validation
+  fieldChanged(e, programmaticChange=false) {
+
+    const {fields, updateFieldFn} = this.props;
+
+    // update field data in our state
+    updateFieldFn(e);
+
+    // inform our validation schema that this field has changed
+    // ... stimulating deterministic validation
+    if (!programmaticChange)
+      this.checkoutSchema.fieldHasChanged(e.target.name);
+
+    // validate our fields, reflecting errors in our GUI
+    const updatedFields = // merge our current fields with this recent change
+    Object.assign({},
+                  fields,
+                  { [e.target.name]: e.target.value })
+      this.checkoutSchema.validate(updatedFields)
+  }
+
+
+  // perform validation when field has been visited (i.e. focus loss or blur)
+  // ... NOTE: this validaion can be conditional based on checkoutSchema heuristics
+  fieldVisited(e) {
+    const {fields} = this.props;
+
+    // inform our validation schema that this field has been visited
+    // ... stimulating deterministic validation
+    this.checkoutSchema.fieldHasBeenVisited(e.target.name);
+
+    // validate our fields, reflecting errors in our GUI
+    // NOTE: hopefully this is not a race condition
+    //       ... i.e. has our fields been updated by now (from onChange)?
+    //                I do not think it is
+    this.checkoutSchema.validate(fields)
+  }
+
+
+  // utility function to format our Credit Card (when it looses focus)
+  creditCardVisited(e) {
+    // inform our validation schema that this field has been visited
+    // ... stimulating deterministic validation
+    this.checkoutSchema.fieldHasBeenVisited(e.target.name);
+
+    // format our credit card
+    this.fieldChanged({ target: {
+                          name:  e.target.name,
+                          value: this.formatCreditCard(e.target.value) }},
+                      true); // programmatic change (i.e. NOT user change)
+  }
+
+
+  // utility function to format our Expiry Date (when it looses focus)
+  expiryVisited(e) {
+    // inform our validation schema that this field has been visited
+    // ... stimulating deterministic validation
+    this.checkoutSchema.fieldHasBeenVisited(e.target.name);
+
+    // format our expiry
+    this.fieldChanged({ target: {
+                          name:  e.target.name,
+                          value: this.formatExpiry(e.target.value) }},
+                      true); // programmatic change (i.e. NOT user change)
+  }
+
+
+  // our purchase button was clicked
+  purchaseClick(e) {
+    const {fields, cartItems, saleCompletedFn} = this.props;
+
+    // prevent default handler from firing (in this case our form would do a submit)
+    e.preventDefault();
+
+    // perform validation ... on ALL fields in our form
+    const checkoutSchema = this.checkoutSchema;
+    checkoutSchema.activateAllValidation();
+    checkoutSchema.validate(fields);
+    if (checkoutSchema.isValid()) {
+      saleCompletedFn(cartItems);
+    }
+    else {
+      // give focus to first invalid field
+      this.refs[checkoutSchema.firstFieldInError()].focus();
+    }
+  }
+
+
+  // convenience template to generate <input> elm with overridable common properties
+  inputTemplate(fieldName, valueHeuristic, additionalProps) {
+    const {fields} = this.props;
+
+    const commonProps = {
+      name:             fieldName,
+      ref:              fieldName,
+      className:        this.inputClassNames(fieldName),
+      title:            this.fieldMsgTitle(fieldName),
+      [valueHeuristic]: fields[fieldName], // ... either value= or defaultValue=
+      onChange:         this.fieldChanged,
+      onBlur:           this.fieldVisited
+    };
+
+    const propsInUse = Object.assign({}, commonProps, additionalProps);
+
+    return <input {...propsInUse}/>;
+  }
+
+
+  // convenience method to generate <input> elm with defaultValue semantice and overridable common properties
+  inputDefault(fieldName, additionalProps) {
+    return this.inputTemplate(fieldName, "defaultValue", additionalProps)
+  }
+
+
+  // convenience method to generate <input> elm with value semantice and overridable common properties
+  input(fieldName, additionalProps) {
+    return this.inputTemplate(fieldName, "value", additionalProps)
   }
 
   displayErrors() {
@@ -255,56 +279,57 @@ class Checkout$ extends MyReactComponent {
              </div>;
   }
 
+
+  // return the <input> class name to use for the supplied field (forField)
   inputClassNames(forField) {
     return this.checkoutSchema.isFieldValid(forField) ?  "" : "inputError";
   }
 
+
+  // return the html title attribute to use for the supplied field (forField)
+  // ... used to communicate validation errors
   fieldMsgTitle(forField) {
     return this.checkoutSchema.detailedFieldMsg(forField);
   }
 
-} // end of ... class Checkout
 
-
-
-// ***
-// *** Utility functions
-// ***
-
-
-function formatCreditCard(card) {
-  const digits = card.replace(/[\D]/g, ''); // strip non-digits
-  // amex 4 digits + 6 digits + 5 digits
-  if (digits[0] === '3') {
-    return (digits.slice(0, 4) + ' ' + // first 4
-            digits.slice(4, 10) + ' ' + // next 6
-            digits.slice(10)).trim(); // remaining 5
-  } else {
-    // other cards split groups of 4 digits
-    return (digits.slice(0, 4) + ' ' +
-            digits.slice(4, 8) + ' ' +
-            digits.slice(8, 12) + ' ' +
-            digits.slice(12)).trim();
+  // format the supplied credit cart
+  formatCreditCard(card) {
+    const digits = card.replace(/[\D]/g, ''); // strip non-digits
+    // amex 4 digits + 6 digits + 5 digits
+    if (digits[0] === '3') {
+      return (digits.slice(0, 4) + ' ' + // first 4
+              digits.slice(4, 10) + ' ' + // next 6
+              digits.slice(10)).trim(); // remaining 5
+    } else {
+      // other cards split groups of 4 digits
+      return (digits.slice(0, 4) + ' ' +
+              digits.slice(4, 8) + ' ' +
+              digits.slice(8, 12) + ' ' +
+              digits.slice(12)).trim();
+    }
   }
-}
 
-
-function formatExpiry(expiry) {
-  let [mm, yy] = expiry.split('/');
-  if (typeof yy !== 'string' && mm.length > 2) {
-    yy = mm.slice(2);
-    mm = mm.slice(0, 2);
+  // format the supplied expiry date
+  formatExpiry(expiry) {
+    let [mm, yy] = expiry.split('/');
+    if (typeof yy !== 'string' && mm.length > 2) {
+      yy = mm.slice(2);
+      mm = mm.slice(0, 2);
+    }
+    mm = this.pad2(mm);
+    if (!yy) return mm;
+    yy = this.pad2(yy);
+    return [mm, yy].join('/');
   }
-  mm = pad2(mm);
-  if (!yy) return mm;
-  yy = pad2(yy);
-  return [mm, yy].join('/');
-}
 
-function pad2(amt) {
-  if (amt.length === 1) return '0'+amt;
-  return amt;
-}
+  // zero pad to two digits
+  pad2(amt) {
+    if (amt.length === 1) return '0'+amt;
+    return amt;
+  }
+
+} // end of ... class Checkout$
 
 
 
