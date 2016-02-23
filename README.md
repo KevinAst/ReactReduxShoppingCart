@@ -1,13 +1,27 @@
 # ReduxEvaluation
 
+**Table of Contents**
+
+- [ReduxEvaluation](#)
+	- [Overview](#)
+	- [App State](#)
+		- [State Specification](#)
+		- [State Transition](#)
+		- [State Code](#)
+		- [State Promotion](#)
+	- [Simplified UI Components](#)
+	- [Time Travel](#)
+	- [Conclusion](#)
+
 ## Overview
 
 This project is an evaluation of the
 [Redux](https://github.com/reactjs/redux/) framework (a popular
-[Flux](https://facebook.github.io/flux/) implementation).
+[Flux](https://facebook.github.io/flux/) implementation)
+used in conjunction with [React](https://facebook.github.io/react/).
 
 The app itself is a Shopping Cart, which is part of the
-[CodeWinds](http://codewinds.com/) [React](https://facebook.github.io/react/) 101 training course.
+[CodeWinds](http://codewinds.com/) React 101 training course.
 
 The app has been implemented in two different ways (found in different
 branches of this project).  This allows you to directly compare the
