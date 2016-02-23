@@ -293,8 +293,6 @@ following means:
 
 ![Time Traveling with Redux](./doc/reduxTimeTravel.png "Time Traveling with Redux")
 
-?? update to be the real image
-
 
 ## Conclusion
 
