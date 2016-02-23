@@ -22,13 +22,6 @@ class Checkout$ extends MyReactComponent {
   constructor(...args) {
     super(...args);
 
-    // NOTE: We can still maintain some things (like this validation state) at a lower level component, 
-    //       and it plays will with Redux.
-    // TODO: this.state.validationState does NOT appear to be needed at all ?? remove it (in a seperate checkin)
-    this.state = {
-      validationState: 0, // a hash of our overal validation state (stimulates error display)
-    };
-
     // define our validation schema
     // ... we instantiate on each Checkout instance, as it holds instance level validation state
     //     FOR EXAMPLE: On subsequent instantiations, we want the schema beingValidated setting to be re-set
@@ -53,13 +46,13 @@ class Checkout$ extends MyReactComponent {
                     consolidatedMsg: "Full Name is required" },
       cvcode:     { joi: Joi.string().required().min(3).max(4).regex(/^\d{3,4}$/, 'all digits'),
                     consolidatedMsg: "CV Code is required: 3 or 4 digits" },
-    });
+    }, this); // pass in our component, allowing AlmondJoi to coordinate React re-renders (visualizing errors), so the validationState does NOT have to be retained in component state
 
   }
 
   componentDidMount() {
     // perform initial validation, once our initial rendering occurs
-    this.setState({ validationState: this.checkoutSchema.validate(this.props.fields) });
+    this.checkoutSchema.validate(this.props.fields)
 
     Esc.regEscHandler(this.props.closeCheckoutFn);
   }
@@ -70,8 +63,6 @@ class Checkout$ extends MyReactComponent {
 
   render() {
     const { fields, total, cartItems, closeCheckoutFn, updateFieldFn, saleCompletedFn} = this.props;
-
-    const { validationState } = this.state;
 
     // update our internal representation of a field change, and perform validation
     const fieldChanged = (e, programmaticChange=false) => {
@@ -87,9 +78,8 @@ class Checkout$ extends MyReactComponent {
       const updatedFields = // merge our current fields with this recent change
         Object.assign({},
                       fields,
-                      { [e.target.name]: e.target.value });
-
-      this.setState({ validationState: this.checkoutSchema.validate(updatedFields) });
+                      { [e.target.name]: e.target.value })
+      this.checkoutSchema.validate(updatedFields)
     };
 
     // perform validation when field has been visited (i.e. focus loss or blur)
@@ -104,7 +94,7 @@ class Checkout$ extends MyReactComponent {
       // NOTE: hopefully this is not a race condition
       //       ... i.e. has our fields been updated by now (from onChange)?
       //                I do not think it is
-      this.setState({ validationState: this.checkoutSchema.validate(fields) });
+      this.checkoutSchema.validate(fields)
     };
 
 
@@ -141,19 +131,16 @@ class Checkout$ extends MyReactComponent {
       e.preventDefault();
 
       // perform validation ... on ALL fields in our form
-      this.checkoutSchema.activateAllValidation();
-      const validationState = this.checkoutSchema.validate(fields);
-      this.setState({ validationState: validationState }, 
-                    () => { // callback of setState() to be executed once state has been applied and rendered
-
-                      if (this.checkoutSchema.isValid()) {
-                        saleCompletedFn(cartItems);
-                      }
-                      else {
-                        // give focus to first invalid field
-                        this.refs[this.checkoutSchema.firstFieldInError()].focus();
-                      }
-                    });
+      const checkoutSchema = this.checkoutSchema;
+      checkoutSchema.activateAllValidation();
+      checkoutSchema.validate(fields);
+      if (checkoutSchema.isValid()) {
+        saleCompletedFn(cartItems);
+      }
+      else {
+        // give focus to first invalid field
+        this.refs[checkoutSchema.firstFieldInError()].focus();
+      }
     };
 
     // convenience function to generate <input> elm with overridable common properties
