@@ -7,13 +7,12 @@ import ItemRow       from './item-row';
 import * as AC       from '../state/actionCreators' // AC: Action Creators
 
 
-
 // ***
 // *** Catalog of items component
 // ***
 
 // our internal Catalog$ class (wrapped with Catalog below)
-function Catalog$({items, filterCategory, changeFilterCategory}) {
+const Catalog$ = ({items, filterCategory, changeFilterCategory}) => {
 
   const filteredItems = filterCategory ?
                           items.filter(item => item.category === filterCategory) :

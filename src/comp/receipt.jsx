@@ -10,12 +10,12 @@ import Esc                        from '../util/esc';
 import * as AC                    from '../state/actionCreators' // AC: Action Creators
 
 
-
 // ***
 // *** Receipt component
 // ***
 
-class Receipt$ extends MyReactComponent { // our internal Receipt$ class (wrapped with Receipt below)
+// our internal Receipt$ class (wrapped with Receipt below)
+class Receipt$ extends MyReactComponent {
 
   componentDidMount() {
     Esc.regEscHandler(this.props.closeReceiptFn);

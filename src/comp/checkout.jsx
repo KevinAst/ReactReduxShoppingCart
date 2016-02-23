@@ -31,6 +31,7 @@ class Checkout$ extends MyReactComponent {
 
     // define our validation schema
     // ... we instantiate on each Checkout instance, as it holds instance level validation state
+    //     FOR EXAMPLE: On subsequent instantiations, we want the schema beingValidated setting to be re-set
     this.checkoutSchema = new AlmondJoi({
       addr1:      { joi: Joi.string().required(),
                     consolidatedMsg: "address line 1 is required",

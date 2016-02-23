@@ -7,7 +7,13 @@ import { connect }     from 'react-redux'
 import ItemDetails     from './item-details';
 import * as AC         from '../state/actionCreators' // AC: Action Creators
 
-const ItemRow$ = ({item, itemExpanded, allowDetails, toggleItemDetailFn, allowBuy, buyItemFn, children, }) => {
+
+// ***
+// *** ItemRow component
+// ***
+
+// our internal ItemRow$ class (wrapped with ItemRow below)
+const ItemRow$ = ({item, itemExpanded, allowDetails, toggleItemDetailFn, allowBuy, buyItemFn, children}) => {
 
   const genDetails = () => {
     if (!allowDetails)

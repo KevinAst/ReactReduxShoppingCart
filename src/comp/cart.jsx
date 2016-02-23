@@ -11,10 +11,11 @@ import * as AC                   from '../state/actionCreators' // AC: Action Cr
 
 
 // ***
-// *** shopping Cart component
+// *** Cart component (a Shopping Cart)
 // ***
 
-class Cart$ extends MyReactComponent { // our internal Cart$ class (wrapped with Cart below)
+// our internal Cart$ class (wrapped with Cart below)
+class Cart$ extends MyReactComponent {
 
   componentDidMount() {
     Esc.regEscHandler(this.props.closeCartFn);

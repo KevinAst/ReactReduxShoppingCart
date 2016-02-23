@@ -1,37 +1,29 @@
 'use strict';
 
-import React            from 'react';
-import { connect }      from 'react-redux'
-import MyReactComponent from '../util/my-react-component';
-import Catalog          from './catalog';
-import Cart             from './cart';
-import Checkout         from './checkout';
-import Receipt          from './receipt';
-import * as AC          from '../state/actionCreators' // AC: Action Creators
-
+import React       from 'react';
+import { connect } from 'react-redux'
+import Catalog     from './catalog';
+import Cart        from './cart';
+import Checkout    from './checkout';
+import Receipt     from './receipt';
+import * as AC     from '../state/actionCreators' // AC: Action Creators
 
 
 // ***
-// *** top-level App component
+// *** App component (our top-level)
 // ***
 
-class App$ extends MyReactComponent { // our internal App$ class (wrapped with App below)
-
-  render() {
-
-    const { cartVisible, checkoutVisible, receiptId, openCartFn } = this.props;
-
-    return <div>
-             <span className="cartButton">
-               <a onClick={this.props.openCartFn}>Cart</a>
-             </span>
-             <Catalog/>
-             { cartVisible     && <Cart/> }
-             { checkoutVisible && <Checkout/> }
-             { receiptId       && <Receipt/> }
-           </div>
-  }
-
+// our internal App$ class (wrapped with App below)
+const App$ = ({cartVisible, checkoutVisible, receiptId, openCartFn}) => {
+  return <div>
+           <span className="cartButton">
+             <a onClick={openCartFn}>Cart</a>
+           </span>
+           <Catalog/>
+           { cartVisible     && <Cart/> }
+           { checkoutVisible && <Checkout/> }
+           { receiptId       && <Receipt/> }
+         </div>
 }
 
 
